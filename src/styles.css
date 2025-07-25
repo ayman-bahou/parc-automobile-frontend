@@ -1,1 +1,211 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Angular Material Theme */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+/* Custom Material Dashboard Styles */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+    background-color: #fafafa;
+}
+
+/* Reset default styling */
+* {
+    box-sizing: border-box;
+}
+
+/* Layout Wrapper - Global override */
+.wrapper {
+    position: relative;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.main-panel {
+    overflow-y: auto !important;
+    overflow-x: hidden;
+    position: relative;
+    float: right;
+    width: calc(100% - 260px);
+    min-height: 100vh;
+    max-height: 100vh;
+    background-color: #fafafa;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 260px;
+    display: block;
+    z-index: 1;
+    color: #fff;
+    font-weight: 200;
+    background: linear-gradient(180deg, #ec407a, #d81b60);
+    background-size: cover;
+    background-position: center center;
+    overflow-y: auto;
+}
+
+/* Custom Grid System */
+.container-fluid {
+    width: 100%;
+    padding: 0 15px;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+}
+
+.col-lg-3, .col-md-6, .col-sm-6, .col-md-12 {
+    position: relative;
+    width: 100%;
+    padding: 0 15px;
+    margin-bottom: 30px;
+}
+
+.col-lg-3 {
+    flex: 0 0 25%;
+    max-width: 25%;
+}
+
+.col-md-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+.col-md-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+@media (max-width: 991px) {
+    .col-lg-3, .col-md-6 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    
+    .main-panel {
+        width: 100%;
+    }
+    
+    .sidebar {
+        left: -260px;
+    }
+}
+
+/* Card Stats Styles */
+.card-stats {
+    margin-bottom: 30px;
+    border-radius: 6px;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
+}
+
+.card-stats .mat-mdc-card-header {
+    padding: 15px 20px 0;
+}
+
+.card-stats .mat-mdc-card-content {
+    padding: 15px 20px;
+}
+
+.card-stats .mat-card-footer {
+    padding: 0 20px 10px;
+    border-top: 1px solid rgba(0,0,0,.12);
+    margin-top: 15px;
+    padding-top: 15px;
+}
+
+/* Material Icons Fix */
+.material-icons {
+    font-family: 'Material Icons' !important;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+
+/* Angular Material Icons */
+mat-icon {
+    font-family: 'Material Icons' !important;
+}
+
+/* Content Styling */
+.content {
+    padding: 30px 15px;
+    min-height: calc(100vh - 60px);
+}
+
+/* Card Icon Styling */
+.card-icon {
+    float: left;
+    margin-top: -20px;
+    margin-right: 15px;
+    margin-left: 15px;
+    width: 60px;
+    height: 60px;
+    border-radius: 3px;
+    background: linear-gradient(60deg, #ffa726, #fb8c00);
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 12px 20px -10px rgba(255, 152, 0, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(255, 152, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-icon mat-icon {
+    font-size: 36px !important;
+    width: 36px;
+    height: 36px;
+    color: white !important;
+}
+
+.card-title {
+    margin-top: 0;
+    margin-bottom: 3px;
+    color: #3c4858;
+    font-size: 1.825em;
+    font-weight: 300;
+    line-height: 1.2em;
+}
+
+.stats {
+    color: #999999;
+    font-size: 12px;
+    line-height: 22px;
+    display: flex;
+    align-items: center;
+}
+
+.stats mat-icon {
+    margin-right: 5px;
+    font-size: 16px !important;
+    width: 16px;
+    height: 16px;
+}

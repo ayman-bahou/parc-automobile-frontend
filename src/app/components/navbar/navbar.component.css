@@ -1,0 +1,228 @@
+.navbar {
+    margin-bottom: 20px;
+    color: #555;
+    border-bottom: 0;
+    border-radius: 3px;
+    z-index: 1029;
+    background-color: #fff !important;
+    box-shadow: 0 4px 18px 0px rgba(0, 0, 0, 0.12), 0 7px 10px -5px rgba(0, 0, 0, 0.15);
+    padding: 10px 20px;
+    width: 100%;
+    position: relative;
+}
+
+.navbar .container-fluid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+}
+
+.collapse.navbar-collapse {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    justify-content: space-between;
+}
+
+.navbar-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-minimize {
+    margin-right: 15px;
+}
+
+.navbar-brand {
+    position: relative;
+    color: inherit;
+    font-size: 18px;
+    line-height: 30px;
+    font-weight: 300;
+    text-decoration: none;
+    margin: 0;
+}
+
+.navbar-form {
+    box-shadow: none;
+    margin: 0 20px;
+    flex: 1;
+    max-width: 300px;
+}
+
+.input-group.no-border {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+}
+
+.input-group.no-border .form-control {
+    border: 0;
+    background: none;
+    background-image: linear-gradient(to top, #9c27b0 2px, rgba(156, 39, 176, 0) 2px), linear-gradient(to top, #d2d2d2 1px, rgba(210, 210, 210, 0) 1px);
+    background-size: 0 100%, 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center bottom, center calc(100% - 1px);
+    background-color: transparent;
+    transition: background 0s ease-out;
+    float: none;
+    box-shadow: none;
+    border-radius: 0;
+    font-weight: 400;
+    width: 100%;
+    height: 36px;
+    padding: 7px 0;
+    font-size: 14px;
+    color: #3C4858;
+}
+
+.input-group.no-border .form-control:focus {
+    background-size: 100% 100%, 100% 100%;
+    transition-duration: 0.3s;
+    box-shadow: none;
+    border: 0;
+    outline: none;
+}
+
+.input-group.no-border .form-control::placeholder {
+    color: #AAAAAA;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.input-group.no-border .btn {
+    margin: 0;
+    background-color: transparent;
+    border: none;
+    color: #999999;
+    position: relative;
+    padding: 8px 10px;
+    font-size: 14px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.input-group.no-border .btn:hover {
+    color: #9c27b0;
+    background-color: rgba(200, 200, 200, 0.2);
+    transform: scale(1.05);
+}
+
+.input-group.no-border .btn:hover .material-icons {
+    color: #9c27b0;
+    transform: scale(1.1);
+}
+
+.input-group.no-border .btn .material-icons {
+    position: relative;
+    top: 0;
+    margin-top: -1px;
+    transition: all 0.3s ease;
+}
+
+.navbar-nav {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
+.navbar-nav .nav-item {
+    margin: 0 5px;
+    position: relative;
+}
+
+.navbar-nav .nav-link {
+    position: relative;
+    color: inherit;
+    padding: 9px 15px;
+    font-weight: 400;
+    font-size: 12px;
+    text-transform: uppercase;
+    border-radius: 3px;
+    line-height: 20px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    background-color: rgba(200, 200, 200, 0.2);
+    color: #9c27b0;
+    transform: scale(1.05);
+}
+
+.navbar-nav .nav-link:hover i.material-icons {
+    color: #9c27b0;
+    transform: scale(1.1);
+}
+
+.navbar-nav .nav-link i.material-icons {
+    font-size: 20px !important;
+    width: 20px;
+    height: 20px;
+    margin-right: 3px;
+    margin-top: -3px;
+    top: 0px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.navbar-minimize .btn i.material-icons {
+    font-size: 20px !important;
+    width: 20px;
+    height: 20px;
+}
+
+.notification {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    min-width: 20px;
+    padding: 3px 7px;
+    font-size: 9px;
+    font-weight: bold;
+    color: #FFFFFF;
+    line-height: 1;
+    vertical-align: baseline;
+    white-space: nowrap;
+    text-align: center;
+    background-color: #f44336;
+    border-radius: 10px;
+}
+
+.navbar-toggler-wrapper {
+    display: none;
+}
+
+@media (max-width: 991px) {
+    .navbar-toggler-wrapper {
+        display: block;
+    }
+    
+    .collapse.navbar-collapse {
+        display: none;
+    }
+}
+
+/* Hide mobile menu items text on desktop */
+.d-lg-none {
+    display: none !important;
+}
+
+@media (max-width: 991px) {
+    .d-lg-none {
+        display: block !important;
+    }
+    
+    .d-md-block {
+        display: block !important;
+    }
+}

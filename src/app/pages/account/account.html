@@ -1,0 +1,212 @@
+<div class="account-container">
+  <!-- Loading state -->
+  <div class="loading-container" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+    <!-- Debug: vérification que le spinner s'affiche -->
+    <p style="margin-top: 20px; color: #1b5e20; font-size: 14px;">Chargement en cours...</p>
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!isLoading">
+    <div class="account-header">
+      <div class="header-background"></div>
+      <div class="profile-section">
+        <div class="avatar-container">
+          <div class="avatar">
+            <i class="material-icons">person</i>
+          </div>
+          <button class="change-avatar-btn">
+            <i class="material-icons">photo_camera</i>
+          </button>
+        </div>
+        <div class="user-info">
+          <h2 class="user-name">{{ userProfile.prenom }} {{ userProfile.nom }}</h2>
+          <p class="user-role">{{ userProfile.role.libelle }}</p>
+          <button class="logout-btn" (click)="logout()">
+            <i class="material-icons">logout</i>
+            <span>Se déconnecter</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  <div class="account-content">
+    <div class="info-card">
+      <div class="card-header">
+        <h3>Informations personnelles</h3>
+        <button class="edit-btn" (click)="toggleEdit()">
+          <i class="material-icons">{{ isEditing ? 'save' : 'edit' }}</i>
+        </button>
+      </div>
+      
+      <div class="card-content">
+        <div class="info-grid">
+          <div class="info-group">
+            <label>Prénom</label>
+            <div class="info-field" *ngIf="!isEditing">
+              <i class="material-icons">person</i>
+              <span>{{ userProfile.prenom }}</span>
+            </div>
+            <div class="input-wrapper" *ngIf="isEditing">
+              <i class="material-icons">person</i>
+              <input type="text" [(ngModel)]="editedProfile.prenom" placeholder="Prénom">
+            </div>
+          </div>
+
+          <div class="info-group">
+            <label>Nom</label>
+            <div class="info-field" *ngIf="!isEditing">
+              <i class="material-icons">person</i>
+              <span>{{ userProfile.nom }}</span>
+            </div>
+            <div class="input-wrapper" *ngIf="isEditing">
+              <i class="material-icons">person</i>
+              <input type="text" [(ngModel)]="editedProfile.nom" placeholder="Nom">
+            </div>
+          </div>
+
+          <div class="info-group">
+            <label>Email</label>
+            <div class="info-field" *ngIf="!isEditing">
+              <i class="material-icons">email</i>
+              <span>{{ userProfile.email }}</span>
+            </div>
+            <div class="input-wrapper" *ngIf="isEditing">
+              <i class="material-icons">email</i>
+              <input type="email" [(ngModel)]="editedProfile.email" placeholder="Email">
+            </div>
+          </div>
+          <div class="info-group">
+            <label>Téléphone</label>
+            <div class="info-field" *ngIf="!isEditing">
+              <i class="material-icons">phone</i>
+              <span>{{ userProfile.numeroTelephone }}</span>
+            </div>
+            <div class="input-wrapper" *ngIf="isEditing">
+              <i class="material-icons">phone</i>
+              <input type="text" [(ngModel)]="editedProfile.numeroTelephone" placeholder="Téléphone">
+            </div>
+          </div>
+
+          <div class="info-group">
+            <label>Rôle</label>
+            <div class="info-field">
+              <i class="material-icons">admin_panel_settings</i>
+              <span class="role-badge role-{{ userProfile.role.libelle.toLowerCase() }}">{{ userProfile.role.libelle }}</span>
+            </div>
+          </div>
+
+         
+        </div>
+      </div>
+    </div>
+
+    <!-- Cette div vide occupe la deuxième colonne quand l'info-card est présente -->
+    <div class="placeholder-for-grid"></div>
+
+    <!-- Section de gestion des utilisateurs (Admin uniquement) -->
+    <div class="user-management-card" *ngIf="isAdmin">
+      <div class="card-header">
+        <h3>Gestion des utilisateurs</h3>
+        <button class="refresh-btn" (click)="loadAllUsers()" [disabled]="isLoadingUsers">
+          <i class="material-icons">refresh</i>
+        </button>
+      </div>
+      
+      <div class="card-content">
+        <!-- Loading state -->
+        <div class="loading-container" *ngIf="isLoadingUsers">
+          <div class="loading-spinner"></div>
+          <p style="margin-top: 20px; color: #1b5e20; font-size: 14px;">Chargement des utilisateurs...</p>
+        </div>
+
+        <!-- Users table -->
+        <div class="users-table-container" *ngIf="!isLoadingUsers">
+          <table class="users-table">
+            <thead>
+              <tr>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <th>Rôle</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of allUsers; let i = index" [class.current-user]="user.id === userProfile.id">
+                <td>{{ user.prenom }}</td>
+                <td>{{ user.nom }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.numeroTelephone }}</td>
+                <td>
+                  <select
+                    class="role-select"
+                    [(ngModel)]="user.role.libelle"
+                    (ngModelChange)="onRoleChange(user, $event)"
+                    [disabled]="user.role.libelle === 'ADMIN'">
+                    <option *ngFor="let role of availableRoles" [value]="role">
+                      {{ role }}
+                    </option>
+                  </select>
+                </td>
+                <td>
+                  <button 
+                    class="delete-btn" 
+                    (click)="deleteUser(user)"
+                    [disabled]="user.role.libelle === 'ADMIN'"
+                    [title]="user.id === userProfile.id ? 'Vous ne pouvez pas supprimer votre propre compte' : 'Supprimer cet utilisateur'">
+                    <i class="material-icons">delete</i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <div class="empty-state" *ngIf="allUsers.length === 0">
+            <i class="material-icons">people_outline</i>
+            <p>Aucun utilisateur trouvé</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="security-card">
+      <div class="card-header">
+        <h3>Sécurité</h3>
+      </div>
+      <div class="card-content">
+        <div class="security-actions">
+          <button class="security-btn" (click)="changePassword()">
+            <i class="material-icons">lock</i>
+            <div>
+              <span>Changer le mot de passe</span>
+              <small>Dernière modification il y a 30 jours</small>
+            </div>
+          </button>
+          
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="activity-card">
+      <div class="card-header">
+        <h3>Activité récente</h3>
+      </div>
+      <div class="card-content">
+        <div class="activity-list">
+          <div class="activity-item" *ngFor="let activity of recentActivity">
+            <div class="activity-icon">
+              <i class="material-icons">{{ activity.icon }}</i>
+            </div>
+            <div class="activity-details">
+              <span class="activity-action">{{ activity.action }}</span>
+              <span class="activity-time">{{ activity.timestamp | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

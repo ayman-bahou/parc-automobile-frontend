@@ -1,0 +1,212 @@
+.content {
+    padding: 30px 15px;
+    min-height: calc(100vh - 123px);
+}
+
+/* Titre de la page */
+.page-title {
+    color: #3c4858;
+    font-weight: 300;
+    margin-bottom: 10px;
+}
+
+/* Cartes de statistiques */
+.card-stats {
+    margin-bottom: 30px;
+    border-radius: 6px;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
+}
+
+.card-icon {
+    float: left;
+    margin-top: -20px;
+    margin-right: 15px;
+    margin-left: 15px;
+    width: 60px;
+    height: 60px;
+    border-radius: 3px;
+    background: linear-gradient(60deg, #ffa726, #fb8c00);
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 12px 20px -10px rgba(255, 152, 0, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(255, 152, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-icon mat-icon {
+    font-size: 36px !important;
+    width: 36px !important;
+    height: 36px !important;
+    color: white !important;
+    font-family: 'Material Icons' !important;
+}
+
+.card-title {
+    margin-top: 0;
+    margin-bottom: 3px;
+    color: #3c4858;
+    font-size: 1.825em;
+    font-weight: 300;
+    line-height: 1.2em;
+}
+
+.stats {
+    color: #999999;
+    font-size: 12px;
+    line-height: 22px;
+    display: flex;
+    align-items: center;
+}
+
+.stats mat-icon {
+    margin-right: 5px;
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+}
+
+.mat-card-footer {
+    padding: 0 20px 10px;
+    border-top: 1px solid rgba(0,0,0,.12);
+    margin-top: 15px;
+    padding-top: 15px;
+}
+
+/* Alertes */
+.alert-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+}
+
+.alert-icon {
+    margin-right: 15px;
+    font-size: 24px !important;
+    width: 24px !important;
+    height: 24px !important;
+}
+
+.alert-content h4 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.alert-content span {
+    font-size: 12px;
+    color: #999;
+}
+
+/* Coûts */
+.cost-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.cost-item.total {
+    border-bottom: none;
+    padding-top: 15px;
+    font-size: 16px;
+}
+
+.cost-label {
+    display: flex;
+    align-items: center;
+}
+
+.cost-label mat-icon {
+    margin-right: 8px;
+    font-size: 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+}
+
+.cost-value {
+    font-weight: 500;
+    color: #3c4858;
+}
+
+/* Missions */
+.mission-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.mission-item:last-child {
+    border-bottom: none;
+}
+
+.mission-info {
+    flex: 1;
+}
+
+.mission-info strong {
+    display: block;
+    margin-bottom: 2px;
+}
+
+.mission-destination {
+    color: #666;
+    font-size: 14px;
+    display: block;
+    margin-bottom: 2px;
+}
+
+/* Véhicules attention */
+.attention-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.attention-item:last-child {
+    border-bottom: none;
+}
+
+.attention-info {
+    flex: 1;
+}
+
+.attention-info strong {
+    display: block;
+    margin-bottom: 2px;
+}
+
+.attention-problem {
+    color: #666;
+    font-size: 14px;
+}
+
+/* Classes de couleur pour les alertes */
+.text-danger {
+    color: #f44336 !important;
+}
+
+.text-warning {
+    color: #ff9800 !important;
+}
+
+.text-info {
+    color: #2196f3 !important;
+}
+
+.text-secondary {
+    color: #9e9e9e !important;
+}
+
+/* Espacement des rows */
+.row {
+    margin-bottom: 30px;
+}

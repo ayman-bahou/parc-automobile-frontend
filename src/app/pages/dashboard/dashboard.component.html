@@ -1,0 +1,241 @@
+<div class="content">
+    <div class="container-fluid">
+        <!-- En-tête du Dashboard -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="page-title">Tableau de Bord - Gestion du Parc Automobile</h2>
+                <p class="text-muted">Vue d'ensemble de votre flotte de véhicules et des opérations en cours</p>
+            </div>
+        </div>
+
+        <!-- Statistiques principales du parc automobile -->
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <mat-card class="card-stats">
+                    <mat-card-header>
+                        <div class="card-icon" style="background: linear-gradient(60deg, #26c6da, #00acc1);">
+                            <mat-icon>directions_car</mat-icon>
+                        </div>
+                        <mat-card-title>Total Véhicules</mat-card-title>
+                        <mat-card-subtitle>Flotte complète</mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <h3 class="card-title">{{ parkingStats.totalVehicules }}</h3>
+                    </mat-card-content>
+                    <div class="mat-card-footer">
+                        <div class="stats">
+                            <mat-icon>local_shipping</mat-icon>
+                            Véhicules enregistrés
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <mat-card class="card-stats">
+                    <mat-card-header>
+                        <div class="card-icon" style="background: linear-gradient(60deg, #66bb6a, #43a047);">
+                            <mat-icon>check_circle</mat-icon>
+                        </div>
+                        <mat-card-title>Véhicules Disponibles</mat-card-title>
+                        <mat-card-subtitle>Prêts pour mission</mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <h3 class="card-title">{{ parkingStats.vehiculesDisponibles }}</h3>
+                    </mat-card-content>
+                    <div class="mat-card-footer">
+                        <div class="stats">
+                            <mat-icon>done</mat-icon>
+                            {{ calculatePercentage(parkingStats.vehiculesDisponibles, parkingStats.totalVehicules) }}% de la flotte
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <mat-card class="card-stats">
+                    <mat-card-header>
+                        <div class="card-icon" style="background: linear-gradient(60deg, #ffa726, #fb8c00);">
+                            <mat-icon>assignment</mat-icon>
+                        </div>
+                        <mat-card-title>Missions en Cours</mat-card-title>
+                        <mat-card-subtitle>Véhicules sur la route</mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <h3 class="card-title">{{ parkingStats.vehiculesEnMission }}</h3>
+                    </mat-card-content>
+                    <div class="mat-card-footer">
+                        <div class="stats">
+                            <mat-icon>timeline</mat-icon>
+                            Véhicules actifs
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <mat-card class="card-stats">
+                    <mat-card-header>
+                        <div class="card-icon" style="background: linear-gradient(60deg, #ef5350, #e53935);">
+                            <mat-icon>build</mat-icon>
+                        </div>
+                        <mat-card-title>Maintenance/Réparation</mat-card-title>
+                        <mat-card-subtitle>Véhicules indisponibles</mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <h3 class="card-title">{{ parkingStats.vehiculesEnReparation + parkingStats.vehiculesEnMaintenance }}</h3>
+                    </mat-card-content>
+                    <div class="mat-card-footer">
+                        <div class="stats">
+                            <mat-icon>warning</mat-icon>
+                            Maintenance requise
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+        
+        <!-- Alertes et Indicateurs -->
+        <div class="row">
+            <div class="col-md-12">
+                <mat-card>
+                    <mat-card-header>
+                        <mat-card-title>Alertes et Notifications</mat-card-title>
+                        <mat-card-subtitle>Éléments nécessitant votre attention</mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="alert-item">
+                                    <mat-icon class="alert-icon text-danger">schedule</mat-icon>
+                                    <div class="alert-content">
+                                        <h4>{{ alertes.visitesEcheesProchainement }}</h4>
+                                        <span>Visites techniques à programmer</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="alert-item">
+                                    <mat-icon class="alert-icon text-warning">build</mat-icon>
+                                    <div class="alert-content">
+                                        <h4>{{ alertes.maintenancesEnRetard }}</h4>
+                                        <span>Maintenances en retard</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="alert-item">
+                                    <mat-icon class="alert-icon text-info">local_gas_station</mat-icon>
+                                    <div class="alert-content">
+                                        <h4>{{ alertes.vehiculesForteConsommation }}</h4>
+                                        <span>Véhicules forte consommation</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="alert-item">
+                                    <mat-icon class="alert-icon text-secondary">handyman</mat-icon>
+                                    <div class="alert-content">
+                                        <h4>{{ alertes.reparationsEnCours }}</h4>
+                                        <span>Réparations en cours</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+        
+        <!-- Coûts et Budget -->
+        <div class="row">
+            <div class="col-md-6">
+                <mat-card>
+                    <mat-card-header>
+                        <mat-card-title>Coûts du Mois Actuel</mat-card-title>
+                        <mat-card-subtitle>Répartition des dépenses de la flotte</mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <div class="cost-item">
+                            <div class="cost-label">
+                                <mat-icon>local_gas_station</mat-icon>
+                                Carburant
+                            </div>
+                            <div class="cost-value">{{ coutsStats.carburant | currency:'EUR':'symbol':'1.0-0' }}</div>
+                        </div>
+                        <div class="cost-item">
+                            <div class="cost-label">
+                                <mat-icon>build</mat-icon>
+                                Réparations
+                            </div>
+                            <div class="cost-value">{{ coutsStats.reparations | currency:'EUR':'symbol':'1.0-0' }}</div>
+                        </div>
+                        <div class="cost-item">
+                            <div class="cost-label">
+                                <mat-icon>settings</mat-icon>
+                                Maintenance
+                            </div>
+                            <div class="cost-value">{{ coutsStats.maintenance | currency:'EUR':'symbol':'1.0-0' }}</div>
+                        </div>
+                        <hr>
+                        <div class="cost-item total">
+                            <div class="cost-label">
+                                <strong>Total</strong>
+                            </div>
+                            <div class="cost-value">
+                                <strong>{{ coutsStats.total | currency:'EUR':'symbol':'1.0-0' }}</strong>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            <div class="col-md-6">
+                <mat-card>
+                    <mat-card-header>
+                        <mat-card-title>Missions Récentes</mat-card-title>
+                        <mat-card-subtitle>Dernières activités de la flotte</mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <div *ngIf="missionsRecentes.length > 0; else noMissions">
+                            <div class="mission-item" *ngFor="let mission of missionsRecentes">
+                                <div class="mission-info">
+                                    <strong>{{ mission.conducteur || 'Conducteur non assigné' }}</strong>
+                                    <span class="mission-destination">{{ mission.destination || mission.lieuDepart + ' → ' + mission.lieuArrivee }}</span>
+                                    <small class="text-muted">{{ mission.vehicule?.immatriculation || mission.vehicule }}</small>
+                                </div>
+                                <mat-chip [color]="getStatutColor(mission.statut)" selected>
+                                    {{ mission.statut }}
+                                </mat-chip>
+                            </div>
+                        </div>
+                        <ng-template #noMissions>
+                            <p class="text-center text-muted">Aucune mission récente</p>
+                        </ng-template>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+        
+        <!-- Véhicules nécessitant une attention -->
+        <div class="row" *ngIf="vehiculesAttention.length > 0">
+            <div class="col-md-12">
+                <mat-card>
+                    <mat-card-header>
+                        <mat-card-title>Véhicules Nécessitant une Attention</mat-card-title>
+                        <mat-card-subtitle>Actions requises pour maintenir la flotte opérationnelle</mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <div class="attention-item" *ngFor="let vehicule of vehiculesAttention">
+                            <div class="attention-info">
+                                <strong>{{ vehicule.immatriculation }}</strong>
+                                <span class="attention-problem">{{ vehicule.probleme }}</span>
+                            </div>
+                            <mat-chip [color]="getPrioriteColor(vehicule.priorite)" selected>
+                                {{ vehicule.priorite | titlecase }}
+                            </mat-chip>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
