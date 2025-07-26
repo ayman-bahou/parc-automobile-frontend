@@ -74,23 +74,33 @@ export class DashboardComponent implements OnInit {
     this.dashboardService.getDashboardStats().subscribe({
       next: (stats: DashboardStats) => {
         this.parkingStats = {
-          totalVehicules: stats.totalVehicules,
-          vehiculesDisponibles: stats.vehiculesDisponibles,
-          vehiculesEnMission: stats.vehiculesEnMission,
-          vehiculesEnReparation: stats.vehiculesEnReparation,
-          vehiculesEnMaintenance: stats.vehiculesEnMaintenance
+          totalVehicules: this.safeNumber(stats.totalVehicules),
+          vehiculesDisponibles: this.safeNumber(stats.vehiculesDisponibles),
+          vehiculesEnMission: this.safeNumber(stats.vehiculesEnMission),
+          vehiculesEnReparation: this.safeNumber(stats.vehiculesEnReparation),
+          vehiculesEnMaintenance: this.safeNumber(stats.vehiculesEnMaintenance)
         };
         
-        this.missionsStats.missionsEnCours = stats.missionsEnCours;
-        this.alertes = stats.alertes;
-        this.coutsStats = stats.coutsStats;
+        this.missionsStats.missionsEnCours = this.safeNumber(stats.missionsEnCours);
+        this.alertes = {
+          visitesEcheesProchainement: this.safeNumber(stats.alertes?.visitesEcheesProchainement),
+          maintenancesEnRetard: this.safeNumber(stats.alertes?.maintenancesEnRetard),
+          vehiculesForteConsommation: this.safeNumber(stats.alertes?.vehiculesForteConsommation),
+          reparationsEnCours: this.safeNumber(stats.alertes?.reparationsEnCours)
+        };
+        this.coutsStats = {
+          carburant: this.safeNumber(stats.coutsStats?.carburant),
+          reparations: this.safeNumber(stats.coutsStats?.reparations),
+          maintenance: this.safeNumber(stats.coutsStats?.maintenance),
+          total: this.safeNumber(stats.coutsStats?.total)
+        };
         this.isLoading = false;
       },
       error: (error) => {
         console.error('Erreur lors du chargement des statistiques:', error);
         this.isLoading = false;
         // Garder les données par défaut en cas d'erreur
-        this.setDefaultData();
+        //this.setDefaultData();
       }
     });
 
@@ -134,30 +144,30 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  setDefaultData(): void {
-    // Données de démonstration en cas d'erreur de connexion
-    this.parkingStats = {
-      totalVehicules: 45,
-      vehiculesDisponibles: 32,
-      vehiculesEnMission: 8,
-      vehiculesEnReparation: 3,
-      vehiculesEnMaintenance: 2
-    };
-    
-    this.alertes = {
-      visitesEcheesProchainement: 5,
-      maintenancesEnRetard: 2,
-      vehiculesForteConsommation: 3,
-      reparationsEnCours: 3
-    };
-    
-    this.coutsStats = {
-      carburant: 12500,
-      reparations: 8750,
-      maintenance: 4200,
-      total: 25450
-    };
-  }
+  //setDefaultData(): void {
+  //  // Données de démonstration en cas d'erreur de connexion
+  //  this.parkingStats = {
+  //    totalVehicules: 45,
+  //    vehiculesDisponibles: 32,
+  //    vehiculesEnMission: 8,
+  //    vehiculesEnReparation: 3,
+  //    vehiculesEnMaintenance: 2
+  //  };
+  //  
+  //  this.alertes = {
+  //    visitesEcheesProchainement: 5,
+  //    maintenancesEnRetard: 2,
+  //    vehiculesForteConsommation: 3,
+  //    reparationsEnCours: 3
+  //  };
+  //  
+  //  this.coutsStats = {
+  //    carburant: 12500,
+  //    reparations: 8750,
+  //    maintenance: 4200,
+  //    total: 25450
+  //  };
+  //}
 
   getStatutColor(statut: string): string {
     switch (statut) {
@@ -178,6 +188,18 @@ export class DashboardComponent implements OnInit {
   }
 
   calculatePercentage(value: number, total: number): number {
-    return Math.round((value / total) * 100);
+    if (!total || total === 0) return 0;
+    return Math.round((this.safeNumber(value) / total) * 100);
+  }
+
+  // Méthode pour gérer les valeurs nulles/undefined et éviter NaN
+  safeNumber(value: number | undefined | null): number {
+    return value ?? 0;
+  }
+
+  // Méthode pour calculer le total des véhicules en maintenance/réparation
+  getTotalMaintenanceReparation(): number {
+    return this.safeNumber(this.parkingStats.vehiculesEnReparation) + 
+           this.safeNumber(this.parkingStats.vehiculesEnMaintenance);
   }
 }

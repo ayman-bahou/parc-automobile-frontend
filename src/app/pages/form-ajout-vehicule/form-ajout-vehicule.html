@@ -1,0 +1,216 @@
+<div class="form-container">
+  <mat-card class="form-card">
+    <mat-card-header>
+      <div mat-card-avatar class="header-avatar">
+        <mat-icon>directions_car</mat-icon>
+      </div>
+      <mat-card-title>Ajouter un véhicule</mat-card-title>
+      <mat-card-subtitle>Remplissez les informations du nouveau véhicule</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="vehiculeForm" (ngSubmit)="onSubmit()">
+        <mat-stepper #stepper>
+          <!-- Étape 1: Informations de base -->
+          <mat-step [stepControl]="vehiculeForm">
+            <ng-template matStepLabel>Informations de base</ng-template>
+            
+            <div class="step-content">
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Nom du véhicule</mat-label>
+                  <input matInput formControlName="nom" placeholder="Ex: Peugeot 308">
+                  <mat-icon matSuffix>drive_eta</mat-icon>
+                  <mat-error>{{ getErrorMessage('nom') }}</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Marque</mat-label>
+                  <mat-select formControlName="marque">
+                    <mat-option *ngFor="let marque of marques" [value]="marque">
+                      {{ marque }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error>{{ getErrorMessage('marque') }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Modèle</mat-label>
+                  <input matInput formControlName="modele" placeholder="Ex: 308 SW">
+                  <mat-error>{{ getErrorMessage('modele') }}</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Immatriculation</mat-label>
+                  <input matInput formControlName="immatriculation" placeholder="AB-123-CD" style="text-transform: uppercase;">
+                  <mat-icon matSuffix>confirmation_number</mat-icon>
+                  <mat-error>{{ getErrorMessage('immatriculation') }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Type de véhicule</mat-label>
+                  <mat-select formControlName="typeVehicule">
+                    <mat-option *ngFor="let type of typesVehicule" [value]="type.value">
+                      {{ type.label }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error>{{ getErrorMessage('typeVehicule') }}</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="step-actions">
+              <button mat-raised-button matStepperNext type="button" color="primary">
+                Suivant
+                <mat-icon>navigate_next</mat-icon>
+              </button>
+            </div>
+          </mat-step>
+
+          <!-- Étape 2: Caractéristiques techniques -->
+          <mat-step [stepControl]="vehiculeForm">
+            <ng-template matStepLabel>Caractéristiques</ng-template>
+            
+            <div class="step-content">
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Année</mat-label>
+                  <input matInput type="number" formControlName="annee" [min]="1990" [max]="2024">
+                  <mat-icon matSuffix>event</mat-icon>
+                  <mat-error>{{ getErrorMessage('annee') }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Kilométrage</mat-label>
+                  <input matInput type="number" formControlName="kilometrage" placeholder="0">
+                  <span matSuffix>km</span>
+                  <mat-error>{{ getErrorMessage('kilometrage') }}</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Carburant</mat-label>
+                  <mat-select formControlName="carburant">
+                    <mat-option *ngFor="let carburant of typesCarburant" [value]="carburant.value">
+                      {{ carburant.label }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-icon matSuffix>local_gas_station</mat-icon>
+                  <mat-error>{{ getErrorMessage('carburant') }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Couleur</mat-label>
+                  <input matInput formControlName="couleur" placeholder="Ex: Blanc">
+                  <mat-icon matSuffix>palette</mat-icon>
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Nombre de places</mat-label>
+                  <input matInput type="number" formControlName="nombrePlaces" [min]="1" [max]="50">
+                  <mat-icon matSuffix>airline_seat_recline_normal</mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Consommation moyenne</mat-label>
+                  <input matInput type="number" step="0.1" formControlName="consommationMoyenne">
+                  <span matSuffix>L/100km</span>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="step-actions">
+              <button mat-button matStepperPrevious type="button">
+                <mat-icon>navigate_before</mat-icon>
+                Précédent
+              </button>
+              <button mat-raised-button matStepperNext type="button" color="primary">
+                Suivant
+                <mat-icon>navigate_next</mat-icon>
+              </button>
+            </div>
+          </mat-step>
+
+          <!-- Étape 3: Informations administratives -->
+          <mat-step [stepControl]="vehiculeForm">
+            <ng-template matStepLabel>Informations administratives</ng-template>
+            
+            <div class="step-content">
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Date d'achat</mat-label>
+                  <input matInput [matDatepicker]="pickerAchat" formControlName="dateAchat">
+                  <mat-datepicker-toggle matSuffix [for]="pickerAchat"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerAchat></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Prochaine visite technique</mat-label>
+                  <input matInput [matDatepicker]="pickerVisite" formControlName="dateProchainerVisiteTechnique">
+                  <mat-datepicker-toggle matSuffix [for]="pickerVisite"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerVisite></mat-datepicker>
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Numéro de série</mat-label>
+                  <input matInput formControlName="numeroSerie" placeholder="Optionnel">
+                  <mat-icon matSuffix>confirmation_number</mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Statut initial</mat-label>
+                  <mat-select formControlName="statut">
+                    <mat-option *ngFor="let statut of statuts" [value]="statut.value">
+                      {{ statut.label }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error>{{ getErrorMessage('statut') }}</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Notes</mat-label>
+                  <textarea matInput formControlName="notes" rows="3" placeholder="Informations complémentaires..."></textarea>
+                  <mat-icon matSuffix>note</mat-icon>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="step-actions">
+              <button mat-button matStepperPrevious type="button">
+                <mat-icon>navigate_before</mat-icon>
+                Précédent
+              </button>
+              <button mat-raised-button type="submit" color="primary" [disabled]="isLoading || !vehiculeForm.valid">
+                <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+                <mat-icon *ngIf="!isLoading">save</mat-icon>
+                {{ isLoading ? 'Enregistrement...' : 'Enregistrer' }}
+              </button>
+            </div>
+          </mat-step>
+        </mat-stepper>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-button type="button" (click)="resetForm()" [disabled]="isLoading">
+        <mat-icon>refresh</mat-icon>
+        Réinitialiser
+      </button>
+      <button mat-button type="button" (click)="goBack()" [disabled]="isLoading">
+        <mat-icon>arrow_back</mat-icon>
+        Retour
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

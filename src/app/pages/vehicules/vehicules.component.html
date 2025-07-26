@@ -1,0 +1,142 @@
+<div class="vehicules-container">
+  <!-- Header avec titre et filtres -->
+  <div class="header-section">
+    <div class="title-and-actions">
+      <div class="page-title">
+        <mat-icon>directions_car</mat-icon>
+        <h1>Gestion des Véhicules</h1>
+      </div>
+      
+      <!-- Bouton d'ajout de véhicule -->
+      <button 
+        mat-fab 
+        extended 
+        color="primary" 
+        class="add-vehicule-btn"
+        (click)="ajouterVehicule()"
+        matTooltip="Ajouter un nouveau véhicule">
+        <mat-icon>add</mat-icon>
+        Ajouter un véhicule
+      </button>
+    </div>
+    
+    <!-- Filtres par statut -->
+    <div class="filters-section">
+      <h3>Filtrer par statut :</h3>
+      <div class="status-chips">
+        <mat-chip-listbox>
+          <mat-chip-option 
+            *ngFor="let option of statutOptions"
+            [selected]="filtreStatut === option.value"
+            (click)="filtrerParStatut(option.value)"
+            [style.background-color]="filtreStatut === option.value ? getStatutColor(option.value) : ''"
+            [style.color]="filtreStatut === option.value ? 'white' : ''">
+            <mat-icon>{{ getStatutIcon(option.value === 'TOUS' ? 'DISPONIBLE' : option.value) }}</mat-icon>
+            {{ option.label }}
+            <span class="chip-count">({{ option.count }})</span>
+          </mat-chip-option>
+        </mat-chip-listbox>
+      </div>
+    </div>
+  </div>
+
+  <!-- Indicateur de chargement -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Chargement des véhicules...</p>
+  </div>
+
+  <!-- Grille des véhicules -->
+  <div *ngIf="!isLoading" class="vehicules-grid">
+    <div *ngIf="vehiculesFiltres.length === 0" class="no-data">
+      <mat-icon>info</mat-icon>
+      <p>Aucun véhicule trouvé pour ce filtre.</p>
+    </div>
+
+    <div class="cards-container">
+      <mat-card 
+        *ngFor="let vehicule of vehiculesFiltres" 
+        class="vehicule-card"
+        (click)="onVehiculeClick(vehicule)"
+        [attr.data-statut]="vehicule.statut">
+        
+        <!-- Statut en haut de la carte -->
+        <div class="statut-header" [style.background-color]="getStatutColor(vehicule.statut)">
+          <mat-icon>{{ getStatutIcon(vehicule.statut) }}</mat-icon>
+          <span>{{ getStatutLabel(vehicule.statut) }}</span>
+        </div>
+
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon matCardAvatar>directions_car</mat-icon>
+            {{ vehicule.nom }}
+          </mat-card-title>
+          <mat-card-subtitle>{{ vehicule.modele }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="vehicule-info">
+            <!-- Immatriculation -->
+            <div class="info-row">
+              <mat-icon>confirmation_number</mat-icon>
+              <span class="label">Immatriculation :</span>
+              <span class="value immatriculation">{{ vehicule.immatriculation }}</span>
+            </div>
+
+            <!-- Marque et année -->
+            <div class="info-row" *ngIf="vehicule.marque">
+              <mat-icon>branding_watermark</mat-icon>
+              <span class="label">Marque :</span>
+              <span class="value">{{ vehicule.marque }}</span>
+              <span *ngIf="vehicule.annee" class="year">({{ vehicule.annee }})</span>
+            </div>
+
+            <!-- Kilométrage -->
+            <div class="info-row" *ngIf="vehicule.kilometrage">
+              <mat-icon>speed</mat-icon>
+              <span class="label">Kilométrage :</span>
+              <span class="value">{{ vehicule.kilometrage | number }} km</span>
+            </div>
+
+            <!-- Carburant -->
+            <div class="info-row" *ngIf="vehicule.carburant">
+              <mat-icon>local_gas_station</mat-icon>
+              <span class="label">Carburant :</span>
+              <span class="value">{{ vehicule.carburant }}</span>
+            </div>
+
+            <!-- Utilisateur assigné -->
+            <div class="info-row utilisateur-info" *ngIf="vehicule.statut === 'EN_MISSION' && vehicule.utilisateur">
+              <mat-icon>person</mat-icon>
+              <span class="label">Utilisateur :</span>
+              <span class="value user-name">{{ getUtilisateurInfo(vehicule) }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <button mat-button color="primary" matTooltip="Voir les détails">
+            <mat-icon>visibility</mat-icon>
+            Détails
+          </button>
+          <button 
+            mat-button 
+            color="accent" 
+            *ngIf="vehicule.statut === 'DISPONIBLE'"
+            matTooltip="Assigner le véhicule">
+            <mat-icon>assignment_ind</mat-icon>
+            Assigner
+          </button>
+          <button 
+            mat-button 
+            color="warn" 
+            *ngIf="vehicule.statut === 'EN_MISSION'"
+            matTooltip="Libérer le véhicule">
+            <mat-icon>logout</mat-icon>
+            Libérer
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

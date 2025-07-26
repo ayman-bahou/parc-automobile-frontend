@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { authGuard } from './guards/auth.guard';
 import { loginGuard } from './guards/login.guard';
+import { FormAjoutVehicule } from './pages/form-ajout-vehicule/form-ajout-vehicule';
 
 export const routes: Routes = [
   {
@@ -32,6 +33,14 @@ export const routes: Routes = [
       {
         path: 'account',
         loadComponent: () => import('./pages/account/account').then(m => m.Account)
+      },
+      {
+        path: 'vehicules',
+        loadComponent: () => import('./pages/vehicules/vehicules.component').then(m => m.VehiculesComponent)
+      },
+      {
+        path: 'form-ajout-vehicule',
+        loadComponent: () => import('./pages/form-ajout-vehicule/form-ajout-vehicule').then(m => m.FormAjoutVehicule) // Assurez-vous que ce composant existe
       }
     ]
   },
