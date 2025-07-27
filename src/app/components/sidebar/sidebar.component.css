@@ -1,6 +1,6 @@
 /* Sidebar Styles */
 .sidebar {
-    background: linear-gradient(180deg, #ec407a, #d81b60);
+    background: linear-gradient(180deg, #667eea, #764ba2);
     position: fixed;
     top: 0;
     bottom: 0;
@@ -137,7 +137,7 @@
     height: 100%;
     content: "";
     display: block;
-    background: #ec407a;
-    background: linear-gradient(180deg, #ec407a, #d81b60);
+    background: #667eea;
+    background: linear-gradient(180deg, #667eea, #764ba2);
     opacity: .8;
 }

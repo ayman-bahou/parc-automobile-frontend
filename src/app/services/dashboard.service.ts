@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { AuthService } from './auth-service/auth-service';
 
 export interface DashboardStats {
+  // Structure compatible avec le backend
   totalVehicules: number;
   vehiculesDisponibles: number;
   vehiculesEnMission: number;

@@ -14,7 +14,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatStepperModule } from '@angular/material/stepper';
 import { VehiculeService } from '../../services/vehicule.service';
-import { Vehicule } from '../../models/vehicule';
+import { Vehicule, TypeCarburant, StatutVehicule } from '../../models/vehicule';
 
 @Component({
   selector: 'app-form-ajout-vehicule',
@@ -48,17 +48,17 @@ export class FormAjoutVehicule implements OnInit {
   ];
   
   typesCarburant = [
-    { value: 'Essence', label: 'Essence' },
-    { value: 'Diesel', label: 'Diesel' },
-    { value: 'Hybride', label: 'Hybride' },
-    { value: 'Electrique', label: 'Électrique' },
-    { value: 'GPL', label: 'GPL' }
+    { value: TypeCarburant.ESSENCE, label: 'Essence' },
+    { value: TypeCarburant.DIESEL, label: 'Diesel' },
+    { value: TypeCarburant.HYBRIDE, label: 'Hybride' },
+    { value: TypeCarburant.ELECTRIQUE, label: 'Électrique' },
+    { value: TypeCarburant.GPL, label: 'GPL' }
   ];
   
   statuts = [
-    { value: 'DISPONIBLE', label: 'Disponible' },
-    { value: 'EN_MAINTENANCE', label: 'En maintenance' },
-    { value: 'EN_REPARATION', label: 'En réparation' }
+    { value: StatutVehicule.DISPONIBLE, label: 'Disponible' },
+    { value: StatutVehicule.EN_MAINTENANCE, label: 'En maintenance' },
+    { value: StatutVehicule.EN_REPARATION, label: 'En réparation' }
   ];
   
   typesVehicule = [
@@ -82,31 +82,27 @@ export class FormAjoutVehicule implements OnInit {
 
   initializeForm(): void {
     this.vehiculeForm = this.formBuilder.group({
-      // Informations de base
-      nom: ['', [Validators.required, Validators.minLength(2)]],
+      // Informations de base - correspondant à l'interface Vehicule
+      immatriculation: ['', [Validators.required, Validators.pattern(/^[A-Z]{2}-\d{3}-[A-Z]{2}$/)]],
       marque: ['', Validators.required],
       modele: ['', [Validators.required, Validators.minLength(2)]],
-      immatriculation: ['', [Validators.required, Validators.pattern(/^[A-Z]{2}-\d{3}-[A-Z]{2}$/)]],
       
       // Caractéristiques techniques
       annee: ['', [Validators.required, Validators.min(1990), Validators.max(new Date().getFullYear())]],
-      kilometrage: ['', [Validators.required, Validators.min(0)]],
-      carburant: ['', Validators.required],
-      typeVehicule: ['', Validators.required],
+      kilometrageActuel: ['', [Validators.required, Validators.min(0)]],
+      typeCarburant: ['', Validators.required],
       
       // Informations administratives
-      dateAchat: [''],
+      dateMiseEnService: [''],
+      dateDerniereVisiteTechnique: [''],
       dateProchainerVisiteTechnique: [''],
-      numeroSerie: [''],
       
       // État et statut
-      statut: ['DISPONIBLE', Validators.required],
+      statut: [StatutVehicule.DISPONIBLE, Validators.required],
       
       // Informations optionnelles
-      couleur: [''],
-      nombrePlaces: ['', [Validators.min(1), Validators.max(50)]],
       consommationMoyenne: ['', [Validators.min(0)]],
-      notes: ['']
+      capaciteReservoir: ['', [Validators.min(1), Validators.max(200)]]
     });
   }
 
@@ -153,7 +149,7 @@ export class FormAjoutVehicule implements OnInit {
   resetForm(): void {
     this.vehiculeForm.reset();
     this.vehiculeForm.patchValue({
-      statut: 'DISPONIBLE'
+      statut: StatutVehicule.DISPONIBLE
     });
   }
 
@@ -172,7 +168,7 @@ export class FormAjoutVehicule implements OnInit {
     }
     if (control?.hasError('pattern')) {
       if (fieldName === 'immatriculation') {
-        return 'Format: AB-123-CD';
+        return 'Format requis: AB-123-CD';
       }
     }
     if (control?.hasError('min')) {

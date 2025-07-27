@@ -4,6 +4,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { SidebarService } from '../../services/sidebar.service';
 
 @Component({
   selector: 'app-navbar',
@@ -14,8 +15,12 @@ import { MatMenuModule } from '@angular/material/menu';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor() { }
+  constructor(private sidebarService: SidebarService) { }
 
   ngOnInit() { }
+
+  toggleSidebar(): void {
+    this.sidebarService.toggleSidebar();
+  }
 
 }

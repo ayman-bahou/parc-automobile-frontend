@@ -9,7 +9,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { Router } from '@angular/router';
 import { VehiculeService } from '../../services/vehicule.service';
-import { Vehicule } from '../../models/vehicule';
+import {  StatutVehicule, TypeCarburant , Vehicule } from '../../models/vehicule';
 
 @Component({
   selector: 'app-vehicules',
@@ -51,8 +51,10 @@ export class VehiculesComponent implements OnInit {
     this.isLoading = true;
     this.vehiculeService.getAllVehicules().subscribe({
       next: (vehicules) => {
+        
         this.vehicules = vehicules;
         this.vehiculesFiltres = vehicules;
+        //this.loadDemoData();
         this.updateStatutCounts();
         this.isLoading = false;
       },
@@ -70,63 +72,53 @@ export class VehiculesComponent implements OnInit {
     this.vehicules = [
       {
         id: 1,
-        nom: 'Peugeot 308',
-        modele: '308 SW',
         immatriculation: 'AB-123-CD',
-        statut: 'DISPONIBLE',
         marque: 'Peugeot',
+        modele: '308 SW',
+        statut: StatutVehicule.DISPONIBLE,
         annee: 2022,
-        kilometrage: 25000,
-        carburant: 'Essence'
+        kilometrageActuel: 25000,
+        typeCarburant: TypeCarburant.ESSENCE
       },
       {
         id: 2,
-        nom: 'Renault Clio',
-        modele: 'Clio V',
         immatriculation: 'EF-456-GH',
-        statut: 'EN_MISSION',
-        utilisateur: {
-          id: 1,
-          nom: 'Dupont',
-          prenom: 'Jean'
-        },
         marque: 'Renault',
+        modele: 'Clio V',
+        statut: StatutVehicule.EN_MISSION,
         annee: 2023,
-        kilometrage: 15000,
-        carburant: 'Diesel'
+        kilometrageActuel: 15000,
+        typeCarburant: TypeCarburant.DIESEL
       },
       {
         id: 3,
-        nom: 'Ford Transit',
-        modele: 'Transit Custom',
         immatriculation: 'IJ-789-KL',
-        statut: 'EN_REPARATION',
         marque: 'Ford',
+        modele: 'Transit Custom',
+        statut: StatutVehicule.EN_REPARATION,
         annee: 2021,
-        kilometrage: 45000,
-        carburant: 'Diesel'
+        kilometrageActuel: 45000,
+        typeCarburant: TypeCarburant.DIESEL
       },
       {
         id: 4,
-        nom: 'Citroën Berlingo',
-        modele: 'Berlingo Multispace',
         immatriculation: 'MN-012-OP',
-        statut: 'EN_MAINTENANCE',
         marque: 'Citroën',
+        modele: 'Berlingo Multispace',
+        statut: StatutVehicule.EN_MAINTENANCE,
         annee: 2020,
-        kilometrage: 60000,
-        carburant: 'Diesel'
+        kilometrageActuel: 60000,
+        typeCarburant: TypeCarburant.DIESEL
       },
       {
         id: 5,
-        nom: 'Volkswagen Golf',
-        modele: 'Golf 8',
         immatriculation: 'QR-345-ST',
-        statut: 'DISPONIBLE',
         marque: 'Volkswagen',
+        modele: 'Golf 8',
+        statut: StatutVehicule.DISPONIBLE,
         annee: 2023,
-        kilometrage: 8000,
-        carburant: 'Essence'
+        kilometrageActuel: 8000,
+        typeCarburant: TypeCarburant.ESSENCE
       }
     ];
     this.vehiculesFiltres = this.vehicules;
@@ -182,17 +174,17 @@ export class VehiculesComponent implements OnInit {
     }
   }
 
-  getUtilisateurInfo(vehicule: Vehicule): string {
-    if (vehicule.utilisateur) {
-      return `${vehicule.utilisateur.prenom} ${vehicule.utilisateur.nom}`;
-    }
-    return 'Non assigné';
-  }
+ // getUtilisateurInfo(vehicule: Vehicule): string {
+ //   if (vehicule.utilisateur) {
+ //     return `${vehicule.utilisateur.prenom} ${vehicule.utilisateur.nom}`;
+ //   }
+ //   return 'Non assigné';
+ // }
 
   onVehiculeClick(vehicule: Vehicule): void {
-    // Action lors du clic sur une carte de véhicule
+    // Navigation vers la page de détails du véhicule
     console.log('Véhicule sélectionné:', vehicule);
-    // Ici vous pouvez ajouter la navigation vers une page de détails du véhicule
+    this.router.navigate(['/admin/vehicules', vehicule.id]);
   }
 
   ajouterVehicule(): void {

@@ -73,6 +73,8 @@ export class DashboardComponent implements OnInit {
     // Charger les statistiques principales du dashboard
     this.dashboardService.getDashboardStats().subscribe({
       next: (stats: DashboardStats) => {
+        console.log('Stats reçues du backend:', stats);
+        
         this.parkingStats = {
           totalVehicules: this.safeNumber(stats.totalVehicules),
           vehiculesDisponibles: this.safeNumber(stats.vehiculesDisponibles),
@@ -80,6 +82,8 @@ export class DashboardComponent implements OnInit {
           vehiculesEnReparation: this.safeNumber(stats.vehiculesEnReparation),
           vehiculesEnMaintenance: this.safeNumber(stats.vehiculesEnMaintenance)
         };
+        
+        console.log('ParkingStats après traitement:', this.parkingStats);
         
         this.missionsStats.missionsEnCours = this.safeNumber(stats.missionsEnCours);
         this.alertes = {

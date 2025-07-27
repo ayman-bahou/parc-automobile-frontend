@@ -28,7 +28,7 @@
     z-index: 1;
     color: #fff;
     font-weight: 200;
-    background: linear-gradient(180deg, #ec407a, #d81b60);
+    background: linear-gradient(180deg, #667eea, #764ba2);
     background-size: cover;
     background-position: center center;
     transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
@@ -54,9 +54,23 @@
     height: 100%;
     content: "";
     display: block;
-    background: #ec407a;
-    background: linear-gradient(180deg, #ec407a, #d81b60);
+    background: #667eea;
+    background: linear-gradient(180deg, #667eea, #764ba2);
     opacity: .8;
+}
+
+/* Sidebar collapse animation */
+.sidebar-collapsed {
+    left: -260px !important;
+}
+
+.main-panel {
+    width: calc(100% - 260px);
+    transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
+}
+
+.main-panel-expanded {
+    width: 100% !important;
 }
 
 @media (max-width: 991px) {
@@ -70,5 +84,9 @@
     
     .sidebar.show {
         left: 0;
+    }
+    
+    .main-panel-expanded {
+        width: 100% !important;
     }
 }

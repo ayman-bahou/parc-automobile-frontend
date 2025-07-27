@@ -1,0 +1,196 @@
+<div class="vehicule-details-container">
+  <!-- Header avec bouton retour -->
+  <div class="header-section">
+    <button mat-icon-button (click)="retourVersListe()" matTooltip="Retour à la liste">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="page-title">
+      <mat-icon>directions_car</mat-icon>
+      <h1>Détails du Véhicule</h1>
+    </div>
+  </div>
+
+  <!-- Indicateur de chargement -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Chargement des détails du véhicule...</p>
+  </div>
+
+  <!-- Message d'erreur si véhicule non trouvé -->
+  <div *ngIf="!isLoading && !vehicule" class="error-container">
+    <mat-icon>error</mat-icon>
+    <h2>Véhicule non trouvé</h2>
+    <p>Le véhicule demandé n'existe pas ou a été supprimé.</p>
+    <button mat-raised-button color="primary" (click)="retourVersListe()">
+      Retour à la liste
+    </button>
+  </div>
+
+  <!-- Détails du véhicule -->
+  <div *ngIf="!isLoading && vehicule" class="details-content">
+    
+    <!-- Carte principale avec informations générales -->
+    <mat-card class="main-info-card">
+      <mat-card-header>
+        <div class="vehicle-header">
+          <div class="vehicle-title">
+            <div class="title-info">
+              <mat-card-title>{{ vehicule.marque }} {{ vehicule.modele }}</mat-card-title>
+              <mat-card-subtitle>{{ vehicule.immatriculation }}</mat-card-subtitle>
+            </div>
+          </div>
+          
+          <!-- Statut -->
+          <mat-chip 
+            [style.background-color]="getStatutColor(vehicule.statut)"
+            [style.color]="'white'"
+            class="statut-chip">
+            <mat-icon>{{ getStatutIcon(vehicule.statut) }}</mat-icon>
+            {{ getStatutLabel(vehicule.statut) }}
+          </mat-chip>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="info-grid">
+          <!-- Informations de base -->
+          <div class="info-section">
+            <h3><mat-icon>info</mat-icon> Informations générales</h3>
+            <div class="info-row">
+              <mat-icon>confirmation_number</mat-icon>
+              <span class="label">Immatriculation :</span>
+              <span class="value">{{ vehicule.immatriculation }}</span>
+            </div>
+            
+            <div class="info-row">
+              <mat-icon>branding_watermark</mat-icon>
+              <span class="label">Marque :</span>
+              <span class="value">{{ vehicule.marque }}</span>
+            </div>
+            
+            <div class="info-row">
+              <mat-icon>directions_car</mat-icon>
+              <span class="label">Modèle :</span>
+              <span class="value">{{ vehicule.modele }}</span>
+            </div>
+            
+            <div class="info-row" *ngIf="vehicule.annee">
+              <mat-icon>event</mat-icon>
+              <span class="label">Année :</span>
+              <span class="value">{{ vehicule.annee }}</span>
+            </div>
+          </div>
+
+          <!-- Informations techniques -->
+          <div class="info-section">
+            <h3><mat-icon>build</mat-icon> Caractéristiques techniques</h3>
+            <div class="info-row" *ngIf="vehicule.typeCarburant">
+              <mat-icon>local_gas_station</mat-icon>
+              <span class="label">Type de carburant :</span>
+              <span class="value">{{ vehicule.typeCarburant }}</span>
+            </div>
+            
+            <div class="info-row" *ngIf="vehicule.consommationMoyenne">
+              <mat-icon>speed</mat-icon>
+              <span class="label">Consommation moyenne :</span>
+              <span class="value">{{ vehicule.consommationMoyenne }} L/100km</span>
+            </div>
+            
+            <div class="info-row" *ngIf="vehicule.capaciteReservoir">
+              <mat-icon>water_drop</mat-icon>
+              <span class="label">Capacité du réservoir :</span>
+              <span class="value">{{ vehicule.capaciteReservoir }} litres</span>
+            </div>
+            
+            <div class="info-row" *ngIf="vehicule.kilometrageActuel">
+              <mat-icon>straighten</mat-icon>
+              <span class="label">Kilométrage actuel :</span>
+              <span class="value">{{ vehicule.kilometrageActuel | number }} km</span>
+            </div>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Dates importantes -->
+        <div class="dates-section" *ngIf="vehicule.dateMiseEnService || vehicule.dateDerniereVisiteTechnique || vehicule.dateProchainerVisiteTechnique">
+          <h3><mat-icon>schedule</mat-icon> Dates importantes</h3>
+          <div class="dates-grid">
+            <div class="date-item" *ngIf="vehicule.dateMiseEnService">
+              <mat-icon>today</mat-icon>
+              <div class="date-info">
+                <span class="date-label">Mise en service</span>
+                <span class="date-value">{{ vehicule.dateMiseEnService | date:'dd/MM/yyyy' }}</span>
+              </div>
+            </div>
+            
+            <div class="date-item" *ngIf="vehicule.dateDerniereVisiteTechnique">
+              <mat-icon>verified</mat-icon>
+              <div class="date-info">
+                <span class="date-label">Dernière visite technique</span>
+                <span class="date-value">{{ vehicule.dateDerniereVisiteTechnique | date:'dd/MM/yyyy' }}</span>
+              </div>
+            </div>
+            
+            <div class="date-item" *ngIf="vehicule.dateProchainerVisiteTechnique">
+              <mat-icon>event_note</mat-icon>
+              <div class="date-info">
+                <span class="date-label">Prochaine visite technique</span>
+                <span class="date-value">{{ vehicule.dateProchainerVisiteTechnique | date:'dd/MM/yyyy' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions class="card-actions">
+        <button mat-raised-button color="primary" (click)="modifierVehicule()">
+          <mat-icon>edit</mat-icon>
+          Modifier
+        </button>
+        
+        <button mat-raised-button color="accent" *ngIf="vehicule.statut === 'DISPONIBLE'">
+          <mat-icon>assignment_ind</mat-icon>
+          Assigner
+        </button>
+        
+        <button mat-raised-button color="warn" *ngIf="vehicule.statut === 'EN_MISSION'">
+          <mat-icon>logout</mat-icon>
+          Libérer
+        </button>
+        
+        <button mat-button (click)="retourVersListe()">
+          <mat-icon>arrow_back</mat-icon>
+          Retour à la liste
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Cartes supplémentaires pour missions, réparations, etc. -->
+    <div class="additional-cards">
+      <mat-card class="history-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>history</mat-icon>
+            Historique des missions
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="no-data">Aucune mission enregistrée pour l'instant.</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="maintenance-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>build</mat-icon>
+            Historique de maintenance
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="no-data">Aucune maintenance enregistrée pour l'instant.</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

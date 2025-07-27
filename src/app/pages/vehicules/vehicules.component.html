@@ -69,7 +69,7 @@
         <mat-card-header>
           <mat-card-title>
             <mat-icon matCardAvatar>directions_car</mat-icon>
-            {{ vehicule.nom }}
+            {{ vehicule.marque }}
           </mat-card-title>
           <mat-card-subtitle>{{ vehicule.modele }}</mat-card-subtitle>
         </mat-card-header>
@@ -92,25 +92,21 @@
             </div>
 
             <!-- Kilométrage -->
-            <div class="info-row" *ngIf="vehicule.kilometrage">
+            <div class="info-row" *ngIf="vehicule.kilometrageActuel">
               <mat-icon>speed</mat-icon>
               <span class="label">Kilométrage :</span>
-              <span class="value">{{ vehicule.kilometrage | number }} km</span>
+              <span class="value">{{ vehicule.kilometrageActuel | number }} km</span>
             </div>
 
             <!-- Carburant -->
-            <div class="info-row" *ngIf="vehicule.carburant">
+            <div class="info-row" *ngIf="vehicule.typeCarburant">
               <mat-icon>local_gas_station</mat-icon>
               <span class="label">Carburant :</span>
-              <span class="value">{{ vehicule.carburant }}</span>
+              <span class="value">{{ vehicule.typeCarburant }}</span>
             </div>
 
             <!-- Utilisateur assigné -->
-            <div class="info-row utilisateur-info" *ngIf="vehicule.statut === 'EN_MISSION' && vehicule.utilisateur">
-              <mat-icon>person</mat-icon>
-              <span class="label">Utilisateur :</span>
-              <span class="value user-name">{{ getUtilisateurInfo(vehicule) }}</span>
-            </div>
+            
           </div>
         </mat-card-content>
 

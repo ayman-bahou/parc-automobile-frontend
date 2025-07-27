@@ -39,6 +39,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/vehicules/vehicules.component').then(m => m.VehiculesComponent)
       },
       {
+        path: 'vehicules/:id',
+        loadComponent: () => import('./pages/vehicule-details/vehicule-details').then(m => m.VehiculeDetails)
+      },
+      {
         path: 'form-ajout-vehicule',
         loadComponent: () => import('./pages/form-ajout-vehicule/form-ajout-vehicule').then(m => m.FormAjoutVehicule) // Assurez-vous que ce composant existe
       }

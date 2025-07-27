@@ -16,33 +16,8 @@
             <ng-template matStepLabel>Informations de base</ng-template>
             
             <div class="step-content">
-              <div class="form-row">
-                <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Nom du véhicule</mat-label>
-                  <input matInput formControlName="nom" placeholder="Ex: Peugeot 308">
-                  <mat-icon matSuffix>drive_eta</mat-icon>
-                  <mat-error>{{ getErrorMessage('nom') }}</mat-error>
-                </mat-form-field>
-              </div>
-
-              <div class="form-row">
-                <mat-form-field appearance="outline" class="half-width">
-                  <mat-label>Marque</mat-label>
-                  <mat-select formControlName="marque">
-                    <mat-option *ngFor="let marque of marques" [value]="marque">
-                      {{ marque }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error>{{ getErrorMessage('marque') }}</mat-error>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline" class="half-width">
-                  <mat-label>Modèle</mat-label>
-                  <input matInput formControlName="modele" placeholder="Ex: 308 SW">
-                  <mat-error>{{ getErrorMessage('modele') }}</mat-error>
-                </mat-form-field>
-              </div>
-
+              <h3 class="section-title">🚗 Identification du Véhicule</h3>
+              
               <div class="form-row">
                 <mat-form-field appearance="outline" class="half-width">
                   <mat-label>Immatriculation</mat-label>
@@ -52,13 +27,23 @@
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="half-width">
-                  <mat-label>Type de véhicule</mat-label>
-                  <mat-select formControlName="typeVehicule">
-                    <mat-option *ngFor="let type of typesVehicule" [value]="type.value">
-                      {{ type.label }}
+                  <mat-label>Marque</mat-label>
+                  <mat-select formControlName="marque">
+                    <mat-option *ngFor="let marque of marques" [value]="marque">
+                      {{ marque }}
                     </mat-option>
                   </mat-select>
-                  <mat-error>{{ getErrorMessage('typeVehicule') }}</mat-error>
+                  <mat-icon matSuffix>business</mat-icon>
+                  <mat-error>{{ getErrorMessage('marque') }}</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Modèle</mat-label>
+                  <input matInput formControlName="modele" placeholder="Ex: 308 SW, Golf VII, Clio">
+                  <mat-icon matSuffix>drive_eta</mat-icon>
+                  <mat-error>{{ getErrorMessage('modele') }}</mat-error>
                 </mat-form-field>
               </div>
             </div>
@@ -73,55 +58,54 @@
 
           <!-- Étape 2: Caractéristiques techniques -->
           <mat-step [stepControl]="vehiculeForm">
-            <ng-template matStepLabel>Caractéristiques</ng-template>
+            <ng-template matStepLabel>Caractéristiques techniques</ng-template>
             
             <div class="step-content">
+              <h3 class="section-title">⚙️ Spécifications Techniques</h3>
+              
               <div class="form-row">
                 <mat-form-field appearance="outline" class="half-width">
-                  <mat-label>Année</mat-label>
-                  <input matInput type="number" formControlName="annee" [min]="1990" [max]="2024">
+                  <mat-label>Année de fabrication</mat-label>
+                  <input matInput type="number" formControlName="annee" [min]="1990" [max]="2025">
                   <mat-icon matSuffix>event</mat-icon>
                   <mat-error>{{ getErrorMessage('annee') }}</mat-error>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="half-width">
-                  <mat-label>Kilométrage</mat-label>
-                  <input matInput type="number" formControlName="kilometrage" placeholder="0">
+                  <mat-label>Kilométrage actuel</mat-label>
+                  <input matInput type="number" formControlName="kilometrageActuel" placeholder="0">
                   <span matSuffix>km</span>
-                  <mat-error>{{ getErrorMessage('kilometrage') }}</mat-error>
+                  <mat-error>{{ getErrorMessage('kilometrageActuel') }}</mat-error>
                 </mat-form-field>
               </div>
 
               <div class="form-row">
                 <mat-form-field appearance="outline" class="half-width">
-                  <mat-label>Carburant</mat-label>
-                  <mat-select formControlName="carburant">
+                  <mat-label>Type de carburant</mat-label>
+                  <mat-select formControlName="typeCarburant">
                     <mat-option *ngFor="let carburant of typesCarburant" [value]="carburant.value">
                       {{ carburant.label }}
                     </mat-option>
                   </mat-select>
                   <mat-icon matSuffix>local_gas_station</mat-icon>
-                  <mat-error>{{ getErrorMessage('carburant') }}</mat-error>
+                  <mat-error>{{ getErrorMessage('typeCarburant') }}</mat-error>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="half-width">
-                  <mat-label>Couleur</mat-label>
-                  <input matInput formControlName="couleur" placeholder="Ex: Blanc">
-                  <mat-icon matSuffix>palette</mat-icon>
+                  <mat-label>Capacité du réservoir</mat-label>
+                  <input matInput type="number" formControlName="capaciteReservoir" placeholder="Ex: 50">
+                  <span matSuffix>L</span>
+                  <mat-error>{{ getErrorMessage('capaciteReservoir') }}</mat-error>
                 </mat-form-field>
               </div>
 
               <div class="form-row">
-                <mat-form-field appearance="outline" class="half-width">
-                  <mat-label>Nombre de places</mat-label>
-                  <input matInput type="number" formControlName="nombrePlaces" [min]="1" [max]="50">
-                  <mat-icon matSuffix>airline_seat_recline_normal</mat-icon>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline" class="half-width">
+                <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Consommation moyenne</mat-label>
-                  <input matInput type="number" step="0.1" formControlName="consommationMoyenne">
+                  <input matInput type="number" step="0.1" formControlName="consommationMoyenne" placeholder="Ex: 7.5">
                   <span matSuffix>L/100km</span>
+                  <mat-icon matSuffix>eco</mat-icon>
+                  <mat-error>{{ getErrorMessage('consommationMoyenne') }}</mat-error>
                 </mat-form-field>
               </div>
             </div>
@@ -143,45 +127,41 @@
             <ng-template matStepLabel>Informations administratives</ng-template>
             
             <div class="step-content">
+              <h3 class="section-title">📋 Gestion Administrative</h3>
+              
               <div class="form-row">
                 <mat-form-field appearance="outline" class="half-width">
-                  <mat-label>Date d'achat</mat-label>
-                  <input matInput [matDatepicker]="pickerAchat" formControlName="dateAchat">
-                  <mat-datepicker-toggle matSuffix [for]="pickerAchat"></mat-datepicker-toggle>
-                  <mat-datepicker #pickerAchat></mat-datepicker>
+                  <mat-label>Date de mise en service</mat-label>
+                  <input matInput [matDatepicker]="pickerMiseEnService" formControlName="dateMiseEnService">
+                  <mat-datepicker-toggle matSuffix [for]="pickerMiseEnService"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerMiseEnService></mat-datepicker>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="half-width">
-                  <mat-label>Prochaine visite technique</mat-label>
-                  <input matInput [matDatepicker]="pickerVisite" formControlName="dateProchainerVisiteTechnique">
-                  <mat-datepicker-toggle matSuffix [for]="pickerVisite"></mat-datepicker-toggle>
-                  <mat-datepicker #pickerVisite></mat-datepicker>
+                  <mat-label>Dernière visite technique</mat-label>
+                  <input matInput [matDatepicker]="pickerDerniereVisite" formControlName="dateDerniereVisiteTechnique">
+                  <mat-datepicker-toggle matSuffix [for]="pickerDerniereVisite"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerDerniereVisite></mat-datepicker>
                 </mat-form-field>
               </div>
 
               <div class="form-row">
                 <mat-form-field appearance="outline" class="half-width">
-                  <mat-label>Numéro de série</mat-label>
-                  <input matInput formControlName="numeroSerie" placeholder="Optionnel">
-                  <mat-icon matSuffix>confirmation_number</mat-icon>
+                  <mat-label>Prochaine visite technique</mat-label>
+                  <input matInput [matDatepicker]="pickerProchaine" formControlName="dateProchainerVisiteTechnique">
+                  <mat-datepicker-toggle matSuffix [for]="pickerProchaine"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerProchaine></mat-datepicker>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="half-width">
-                  <mat-label>Statut initial</mat-label>
+                  <mat-label>Statut du véhicule</mat-label>
                   <mat-select formControlName="statut">
                     <mat-option *ngFor="let statut of statuts" [value]="statut.value">
                       {{ statut.label }}
                     </mat-option>
                   </mat-select>
+                  <mat-icon matSuffix>info</mat-icon>
                   <mat-error>{{ getErrorMessage('statut') }}</mat-error>
-                </mat-form-field>
-              </div>
-
-              <div class="form-row">
-                <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Notes</mat-label>
-                  <textarea matInput formControlName="notes" rows="3" placeholder="Informations complémentaires..."></textarea>
-                  <mat-icon matSuffix>note</mat-icon>
                 </mat-form-field>
               </div>
             </div>

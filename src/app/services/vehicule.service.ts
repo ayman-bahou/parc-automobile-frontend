@@ -21,12 +21,6 @@ export class VehiculeService {
     });
   }
 
-
-  saveVehicule(vehicule: Vehicule): void{
-    this.http.post<Vehicule>(this.baseUrl, vehicule, { headers: this.getHttpHeaders() }).subscribe();
-  }
-
-
   // Récupérer tous les véhicules
   getAllVehicules(): Observable<Vehicule[]> {
     return this.http.get<Vehicule[]>(this.baseUrl, { headers: this.getHttpHeaders() });
