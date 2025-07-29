@@ -4,8 +4,8 @@
       <div mat-card-avatar class="header-avatar">
         <mat-icon>directions_car</mat-icon>
       </div>
-      <mat-card-title>Ajouter un véhicule</mat-card-title>
-      <mat-card-subtitle>Remplissez les informations du nouveau véhicule</mat-card-subtitle>
+      <mat-card-title>{{ isEditMode ? 'Modifier le véhicule' : 'Ajouter un véhicule' }}</mat-card-title>
+      <mat-card-subtitle>{{ isEditMode ? 'Modifiez les informations du véhicule' : 'Remplissez les informations du nouveau véhicule' }}</mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content>
@@ -174,7 +174,7 @@
               <button mat-raised-button type="submit" color="primary" [disabled]="isLoading || !vehiculeForm.valid">
                 <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
                 <mat-icon *ngIf="!isLoading">save</mat-icon>
-                {{ isLoading ? 'Enregistrement...' : 'Enregistrer' }}
+                {{ isLoading ? (isEditMode ? 'Modification...' : 'Enregistrement...') : (isEditMode ? 'Modifier' : 'Enregistrer') }}
               </button>
             </div>
           </mat-step>

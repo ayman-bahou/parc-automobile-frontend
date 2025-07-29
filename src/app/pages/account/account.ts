@@ -88,23 +88,20 @@ export class Account implements OnInit {
     // Utiliser le service pour récupérer le profil utilisateur via API
     this.userService.getUserProfile().subscribe({
       next: (user) => {
-        // Ajout d'un délai pour voir le spinner (à supprimer après test)
-        setTimeout(() => {
-          this.userProfile = {
-            id: user.id,
-            prenom: user.prenom,
-            nom: user.nom,
-            email: user.email,
-            numeroTelephone: user.numeroTelephone,
-            role: user.role,
-            motDePasse: '' // Ne pas afficher le mot de passe
-          };
-          
-          //this.editedProfile = { ...this.userProfile };
-          console.log('Profil utilisateur chargé depuis l\'API:', this.userProfile);
-          console.log('Loading finished, setting isLoading to false');
-          this.isLoading = false;
-        }, 2000); // 2 secondes de délai pour voir le spinner
+        this.userProfile = {
+          id: user.id,
+          prenom: user.prenom,
+          nom: user.nom,
+          email: user.email,
+          numeroTelephone: user.numeroTelephone,
+          role: user.role,
+          motDePasse: '' // Ne pas afficher le mot de passe
+        };
+        
+        this.editedProfile = { ...this.userProfile };
+        console.log('Profil utilisateur chargé depuis l\'API:', this.userProfile);
+        console.log('Loading finished, setting isLoading to false');
+        this.isLoading = false;
       },
       error: (error) => {
         console.error('Erreur lors du chargement du profil:', error);

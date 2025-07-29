@@ -1,0 +1,697 @@
+/* Container principal */
+.missions-container {
+  background: #f8f9fa;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Header Section */
+.missions-header {
+  margin-bottom: 30px;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+}
+
+.header-text {
+  color: #343a40;
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0;
+  margin-bottom: 8px;
+  color: #343a40;
+}
+
+.title-icon {
+  font-size: 2rem;
+  margin-right: 12px;
+  color: #6c757d;
+}
+
+.page-subtitle {
+  font-size: 1rem;
+  color: #6c757d;
+  font-weight: 400;
+  margin: 0;
+}
+
+.header-stats {
+  display: flex;
+  gap: 20px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  min-width: 80px;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.stat-number {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.8rem;
+  color: #6c757d;
+  font-weight: 500;
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+
+/* Content Section */
+.missions-content {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  min-height: 500px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+}
+
+/* Filters Section */
+.filters-section {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f8f9fa;
+}
+
+.filters-header {
+  margin-bottom: 16px;
+}
+
+.filters-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.filter-btn {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 0.85rem;
+  text-transform: none;
+  transition: all 0.2s ease;
+  border: 1px solid #dee2e6;
+  background: white;
+  color: #6c757d;
+}
+
+.filter-btn mat-icon {
+  margin-right: 6px;
+  font-size: 1rem;
+}
+
+.filter-btn:hover {
+  background: #f8f9fa;
+  border-color: #adb5bd;
+  color: #495057;
+}
+
+.filter-btn.active {
+  background: #007bff;
+  border-color: #007bff;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+}
+
+.filter-btn.en-cours.active {
+  background: #28a745;
+  border-color: #28a745;
+  box-shadow: 0 2px 4px rgba(40, 167, 69, 0.2);
+}
+
+.filter-btn.terminee.active {
+  background: #007bff;
+  border-color: #007bff;
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+}
+
+.filter-btn.annulee.active {
+  background: #dc3545;
+  border-color: #dc3545;
+  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
+}
+
+/* Loading State */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  color: #495057;
+}
+
+.loading-spinner {
+  margin-bottom: 20px;
+}
+
+.spinning {
+  font-size: 2.5rem;
+  animation: spin 2s linear infinite;
+  color: #6c757d;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #6c757d;
+}
+
+/* Error State */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  color: #495057;
+  text-align: center;
+}
+
+/* Session Expired State */
+.session-expired-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  color: #495057;
+  text-align: center;
+  background: #fff8f8;
+  border-radius: 12px;
+  border: 1px solid #f8d7da;
+}
+
+.session-expired-icon {
+  font-size: 4rem;
+  color: #dc3545;
+  margin-bottom: 20px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.session-expired-container h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #721c24;
+}
+
+.session-expired-container p {
+  font-size: 1rem;
+  color: #856404;
+  margin-bottom: 30px;
+  font-weight: 400;
+}
+
+.session-expired-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 24px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.session-expired-btn:hover {
+  background: #c82333;
+  transform: translateY(-2px);
+}
+
+.session-expired-btn mat-icon {
+  margin-right: 8px;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+}
+
+.loading-container p {
+  margin-top: 16px;
+  color: #6c757d;
+  font-size: 1rem;
+}
+
+.error-icon {
+  font-size: 3rem;
+  color: #dc3545;
+  margin-bottom: 10px;
+}
+
+.error-container h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #495057;
+}
+
+.error-container p {
+  font-size: 1rem;
+  color: #6c757d;
+  margin-bottom: 30px;
+  font-weight: 400;
+}
+
+/* Empty State */
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  color: #495057;
+  text-align: center;
+}
+
+.empty-illustration mat-icon {
+  font-size: 4rem;
+  color: #adb5bd;
+  margin-bottom: 20px;
+}
+
+.empty-container h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #495057;
+}
+
+.empty-container p {
+  font-size: 1rem;
+  color: #6c757d;
+  max-width: 400px;
+  font-weight: 400;
+}
+
+/* Missions Grid */
+.missions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+  padding: 20px 0;
+}
+
+.mission-card-wrapper {
+  perspective: 1000px;
+}
+
+.mission-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e9ecef;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.mission-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Status-based card styling */
+.mission-card.status-en_cours {
+  border-left: 4px solid #28a745;
+}
+
+.mission-card.status-terminee {
+  border-left: 4px solid #007bff;
+}
+
+.mission-card.status-annulee {
+  border-left: 4px solid #dc3545;
+}
+
+/* Card Header */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #f8f9fa;
+  background: #fafafa;
+}
+
+.mission-id {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.mission-id mat-icon {
+  margin-right: 6px;
+  color: #6c757d;
+  font-size: 1.1rem;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge mat-icon {
+  font-size: 0.8rem;
+  margin-right: 3px;
+}
+
+.status-badge.status-en_cours {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-badge.status-terminee {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.status-badge.status-annulee {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* Card Content */
+.card-content {
+  padding: 16px;
+}
+
+/* Route Section - Simplifié */
+.route-section {
+  margin-bottom: 16px;
+}
+
+.route-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 8px 0;
+}
+
+.route-item:last-child {
+  margin-bottom: 0;
+}
+
+.route-item mat-icon {
+  font-size: 1rem;
+  margin-right: 10px;
+  padding: 6px;
+  border-radius: 50%;
+  color: white;
+  min-width: 28px;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.route-item.departure mat-icon {
+  background: #28a745;
+}
+
+.route-item.destination mat-icon {
+  background: #dc3545;
+}
+
+.route-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.route-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: #6c757d;
+  margin-bottom: 2px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.route-value {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #495057;
+  line-height: 1.2;
+}
+
+/* Informations essentielles - Nouveau */
+.essential-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  border-left: 3px solid #dee2e6;
+}
+
+.info-item mat-icon {
+  font-size: 0.9rem;
+  margin-right: 8px;
+  color: #6c757d;
+}
+
+.info-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  color: #6c757d;
+  margin-bottom: 1px;
+  font-weight: 600;
+}
+
+.info-value {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #495057;
+}
+
+/* Véhicule info spéciale */
+.info-item.vehicule {
+  border-left-color: #007bff;
+}
+
+.info-item.vehicule mat-icon {
+  color: #007bff;
+}
+
+/* Date info spéciale */
+.info-item.date {
+  border-left-color: #fd7e14;
+}
+
+.info-item.date mat-icon {
+  color: #fd7e14;
+}
+
+/* Card Actions - Simplifié */
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 12px 16px;
+  background: #fafafa;
+  border-top: 1px solid #f8f9fa;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-weight: 500;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+.action-btn mat-icon {
+  margin-right: 4px;
+  font-size: 0.9rem;
+}
+
+.action-btn.secondary {
+  background: white;
+  color: #6c757d;
+  border: 1px solid #dee2e6;
+}
+
+.action-btn.secondary:hover {
+  background: #f8f9fa;
+  color: #495057;
+}
+
+.action-btn.primary {
+  background: #28a745;
+  color: white;
+  margin-left: 8px;
+}
+
+.action-btn.primary:hover {
+  background: #218838;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .missions-container {
+    padding: 15px;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .page-title {
+    font-size: 1.5rem;
+  }
+  
+  .filter-buttons {
+    justify-content: center;
+  }
+  
+  .filter-btn {
+    flex: 1;
+    min-width: 120px;
+    justify-content: center;
+  }
+  
+  .missions-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .essential-info {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .card-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .action-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-stats {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  
+  .stat-card {
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .filter-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filter-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .card-header {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  
+  .card-content {
+    padding: 12px;
+  }
+  
+  .missions-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}

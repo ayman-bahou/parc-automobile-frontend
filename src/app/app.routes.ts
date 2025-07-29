@@ -43,8 +43,24 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/vehicule-details/vehicule-details').then(m => m.VehiculeDetails)
       },
       {
+        path: 'missions',
+        loadComponent: () => import('./pages/missions/missions').then(m => m.Missions)
+      },
+      {
+        path: 'form-mission',
+        loadComponent: () => import('./pages/form-mission/form-mission').then(m => m.FormMissionComponent)
+      },
+      {
+        path: 'form-mission/:id',
+        loadComponent: () => import('./pages/form-mission/form-mission').then(m => m.FormMissionComponent)
+      },
+      {
         path: 'form-ajout-vehicule',
         loadComponent: () => import('./pages/form-ajout-vehicule/form-ajout-vehicule').then(m => m.FormAjoutVehicule) // Assurez-vous que ce composant existe
+      },
+      {
+        path: 'modifier-vehicule/:id',
+        loadComponent: () => import('./pages/form-ajout-vehicule/form-ajout-vehicule').then(m => m.FormAjoutVehicule)
       }
     ]
   },

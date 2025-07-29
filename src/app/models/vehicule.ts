@@ -1,3 +1,6 @@
+import { Mission } from './mission';
+
+
 // Énumérations correspondant à celles du backend Java
 export enum TypeCarburant {
   ESSENCE = 'ESSENCE',
@@ -36,11 +39,16 @@ export interface Vehicule {
   maintenances?: MaintenanceProgrammee[];
 }
 
-// Interfaces pour les relations (basées sur vos entités Java)
-export interface Mission {
-  id?: number;
-  // Ajoutez les autres propriétés selon votre entité Mission
+// Enum pour le statut des missions
+export enum StatutMission {
+  PLANIFIEE = 'PLANIFIEE',
+  EN_COURS = 'EN_COURS',
+  TERMINEE = 'TERMINEE',
+  ANNULEE = 'ANNULEE'
 }
+
+
+
 
 export interface Consommation {
   id?: number;

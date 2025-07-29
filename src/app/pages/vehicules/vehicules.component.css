@@ -1,11 +1,16 @@
 .vehicules-container {
-  padding: 24px;
+  padding: 20px;
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #f8f9fa;
 }
 
 .header-section {
   margin-bottom: 32px;
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
 }
 
 .title-and-actions {
@@ -28,63 +33,94 @@
   font-size: 32px;
   width: 32px;
   height: 32px;
-  color: #1976d2;
+  color: #6c757d;
 }
 
 .page-title h1 {
   margin: 0;
-  color: #333;
-  font-weight: 500;
+  color: #343a40;
+  font-weight: 600;
+  font-size: 2rem;
 }
 
-.filters-section h3 {
+/* Filters Section - Style moderne comme missions */
+.filters-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #f8f9fa;
+}
+
+.filters-header {
   margin-bottom: 16px;
-  color: #666;
-  font-weight: 500;
 }
 
-.status-chips {
-  margin-bottom: 16px;
+.filters-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #495057;
 }
 
-.status-chips mat-chip-listbox {
+.filter-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 12px;
 }
 
-.status-chips mat-chip-option {
+.filter-btn {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
   border-radius: 20px;
-  border: 2px solid #e0e0e0;
-  transition: all 0.3s ease;
-  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.85rem;
+  text-transform: none;
+  transition: all 0.2s ease;
+  border: 1px solid #dee2e6;
+  background: white;
+  color: #6c757d;
 }
 
-.status-chips mat-chip-option:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+.filter-btn mat-icon {
+  margin-right: 6px;
+  font-size: 1rem;
 }
 
-.status-chips mat-chip-option mat-icon {
-  margin-right: 8px;
+.filter-btn:hover {
+  background: #f8f9fa;
+  border-color: #adb5bd;
+  color: #495057;
 }
 
-.status-chips mat-chip-option .chip-count {
-  margin-left: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  opacity: 0.8;
-  background-color: rgba(255, 255, 255, 0.2);
-  padding: 2px 6px;
-  border-radius: 10px;
-  min-width: 20px;
-  text-align: center;
-  display: inline-block;
+.filter-btn.active {
+  background: #007bff;
+  border-color: #007bff;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
 }
 
-.status-chips mat-chip-option[aria-selected="true"] .chip-count {
-  background-color: rgba(255, 255, 255, 0.3);
-  opacity: 1;
+.filter-btn.disponible.active {
+  background: #28a745;
+  border-color: #28a745;
+  box-shadow: 0 2px 4px rgba(40, 167, 69, 0.2);
+}
+
+.filter-btn.en-mission.active {
+  background: #007bff;
+  border-color: #007bff;
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+}
+
+.filter-btn.en-reparation.active {
+  background: #dc3545;
+  border-color: #dc3545;
+  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
+}
+
+.filter-btn.en-maintenance.active {
+  background: #fd7e14;
+  border-color: #fd7e14;
+  box-shadow: 0 2px 4px rgba(253, 126, 20, 0.2);
 }
 
 /* Bouton d'ajout de véhicule */
@@ -117,22 +153,66 @@
   height: 20px !important;
 }
 
+/* Grille des véhicules */
+.vehicules-grid {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+  overflow: hidden;
+}
+
+/* Filters Section - Dans le container des cartes */
+.vehicules-grid .filters-section {
+  padding: 24px 30px;
+  border-bottom: 1px solid #f8f9fa;
+  background: #fefefe;
+  margin: 0;
+  border-top: none;
+}
+
+.vehicules-grid .filters-header {
+  margin-bottom: 16px;
+}
+
+.vehicules-grid .filters-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.vehicules-grid .filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* Container pour les cartes */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 24px;
+  padding: 30px;
+}
+
+/* Loading container */
 .loading-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 64px;
-  gap: 16px;
+  padding: 80px 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
 }
 
 .loading-container p {
-  color: #666;
-  font-size: 16px;
-}
-
-.vehicules-grid {
-  width: 100%;
+  margin-top: 16px;
+  color: #6c757d;
+  font-size: 1rem;
 }
 
 .no-data {
@@ -140,9 +220,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 64px;
+  padding: 64px 30px;
   color: #666;
   gap: 16px;
+  background: white;
 }
 
 .no-data mat-icon {
@@ -316,19 +397,35 @@
   .vehicules-container {
     padding: 16px;
   }
+
+  .header-section {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .vehicules-grid .filters-section {
+    padding: 20px;
+  }
   
   .cards-container {
     grid-template-columns: 1fr;
     gap: 16px;
+    padding: 20px;
   }
   
   .page-title h1 {
     font-size: 24px;
   }
   
-  .status-chips mat-chip-listbox {
-    flex-direction: column;
-    align-items: stretch;
+  .filter-buttons {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .filter-btn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    min-width: 80px;
   }
   
   .vehicule-card mat-card-actions {
@@ -358,8 +455,24 @@
 }
 
 @media (max-width: 480px) {
+  .vehicules-grid .filters-section {
+    padding: 16px;
+  }
+
   .cards-container {
     grid-template-columns: 1fr;
+    padding: 16px;
+  }
+  
+  .filter-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-btn {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 8px;
   }
   
   .info-row {
@@ -375,5 +488,47 @@
   .add-vehicule-btn {
     height: 48px !important;
     font-size: 14px !important;
+  }
+}
+
+/* Styles pour l'affichage du conducteur */
+.info-row.current-user {
+  background-color: #e3f2fd;
+  border-radius: 8px;
+  padding: 8px;
+  margin: 4px 0;
+}
+
+.current-user-icon {
+  color: #ffa000;
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  margin-left: 8px;
+}
+
+.info-row.current-user .value {
+  font-weight: 500;
+  color: #1976d2;
+}
+
+.info-row.current-user .label {
+  font-weight: 500;
+}
+
+/* Animation pour le bouton libérer quand c'est la mission de l'utilisateur */
+.vehicule-card[data-statut="EN_MISSION"] .current-user + * button[color="warn"] {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(244, 67, 54, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(244, 67, 54, 0);
   }
 }

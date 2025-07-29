@@ -1,6 +1,6 @@
 <div class="vehicules-container">
   <!-- Header avec titre et filtres -->
-  <div class="header-section">
+  <div class="header-section" *ngIf="!isLoading">
     <div class="title-and-actions">
       <div class="page-title">
         <mat-icon>directions_car</mat-icon>
@@ -20,24 +20,7 @@
       </button>
     </div>
     
-    <!-- Filtres par statut -->
-    <div class="filters-section">
-      <h3>Filtrer par statut :</h3>
-      <div class="status-chips">
-        <mat-chip-listbox>
-          <mat-chip-option 
-            *ngFor="let option of statutOptions"
-            [selected]="filtreStatut === option.value"
-            (click)="filtrerParStatut(option.value)"
-            [style.background-color]="filtreStatut === option.value ? getStatutColor(option.value) : ''"
-            [style.color]="filtreStatut === option.value ? 'white' : ''">
-            <mat-icon>{{ getStatutIcon(option.value === 'TOUS' ? 'DISPONIBLE' : option.value) }}</mat-icon>
-            {{ option.label }}
-            <span class="chip-count">({{ option.count }})</span>
-          </mat-chip-option>
-        </mat-chip-listbox>
-      </div>
-    </div>
+    
   </div>
 
   <!-- Indicateur de chargement -->
@@ -48,6 +31,54 @@
 
   <!-- Grille des véhicules -->
   <div *ngIf="!isLoading" class="vehicules-grid">
+    <!-- Filtres par statut -->
+    <div class="filters-section">
+      <div class="filters-header">
+        <h3>Filtrer par statut</h3>
+      </div>
+      <div class="filter-buttons">
+        <button 
+          mat-stroked-button 
+          [class.active]="isFilterActive('TOUS')"
+          (click)="filtrerParStatut('TOUS')"
+          class="filter-btn">
+          <mat-icon>list</mat-icon>
+          Tous ({{ getVehiculesCount('TOUS') }})
+        </button>
+        <button 
+          mat-stroked-button 
+          [class.active]="isFilterActive('DISPONIBLE')"
+          (click)="filtrerParStatut('DISPONIBLE')"
+          class="filter-btn disponible">
+          <mat-icon>check_circle</mat-icon>
+          Disponibles ({{ getVehiculesCount('DISPONIBLE') }})
+        </button>
+        <button 
+          mat-stroked-button 
+          [class.active]="isFilterActive('EN_MISSION')"
+          (click)="filtrerParStatut('EN_MISSION')"
+          class="filter-btn en-mission">
+          <mat-icon>directions_car</mat-icon>
+          En mission ({{ getVehiculesCount('EN_MISSION') }})
+        </button>
+        <button 
+          mat-stroked-button 
+          [class.active]="isFilterActive('EN_REPARATION')"
+          (click)="filtrerParStatut('EN_REPARATION')"
+          class="filter-btn en-reparation">
+          <mat-icon>build</mat-icon>
+          En réparation ({{ getVehiculesCount('EN_REPARATION') }})
+        </button>
+        <button 
+          mat-stroked-button 
+          [class.active]="isFilterActive('EN_MAINTENANCE')"
+          (click)="filtrerParStatut('EN_MAINTENANCE')"
+          class="filter-btn en-maintenance">
+          <mat-icon>settings</mat-icon>
+          En maintenance ({{ getVehiculesCount('EN_MAINTENANCE') }})
+        </button>
+      </div>
+    </div>
     <div *ngIf="vehiculesFiltres.length === 0" class="no-data">
       <mat-icon>info</mat-icon>
       <p>Aucun véhicule trouvé pour ce filtre.</p>
@@ -105,13 +136,26 @@
               <span class="value">{{ vehicule.typeCarburant }}</span>
             </div>
 
-            <!-- Utilisateur assigné -->
+            <!-- Conducteur en mission -->
+            <div class="info-row" *ngIf="vehicule.statut === 'EN_MISSION' && getConducteurMission(vehicule)" 
+                 [class.current-user]="isCurrentUserConducteur(vehicule)">
+              <mat-icon>person</mat-icon>
+              <span class="label">Conducteur :</span>
+              <span class="value">{{ getConducteurMission(vehicule) }}</span>
+              <mat-icon *ngIf="isCurrentUserConducteur(vehicule)" 
+                       class="current-user-icon" 
+                       matTooltip="C'est votre mission">star</mat-icon>
+            </div>
             
           </div>
         </mat-card-content>
 
         <mat-card-actions>
-          <button mat-button color="primary" matTooltip="Voir les détails">
+          <button 
+            mat-button 
+            color="primary" 
+            matTooltip="Voir les détails"
+            (click)="$event.stopPropagation(); voirDetails(vehicule)">
             <mat-icon>visibility</mat-icon>
             Détails
           </button>
@@ -119,15 +163,17 @@
             mat-button 
             color="accent" 
             *ngIf="vehicule.statut === 'DISPONIBLE'"
-            matTooltip="Assigner le véhicule">
+            matTooltip="Assigner le véhicule"
+            (click)="$event.stopPropagation(); assignerVehicule(vehicule)">
             <mat-icon>assignment_ind</mat-icon>
             Assigner
           </button>
           <button 
             mat-button 
             color="warn" 
-            *ngIf="vehicule.statut === 'EN_MISSION'"
-            matTooltip="Libérer le véhicule">
+            *ngIf="vehicule.statut === 'EN_MISSION' && canLibererVehicule(vehicule)"
+            matTooltip="Libérer le véhicule (seulement vos missions)"
+            (click)="$event.stopPropagation(); libererVehicule(vehicule)">
             <mat-icon>logout</mat-icon>
             Libérer
           </button>

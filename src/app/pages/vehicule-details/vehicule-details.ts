@@ -183,8 +183,7 @@ export class VehiculeDetails implements OnInit {
 
   modifierVehicule(): void {
     if (this.vehicule?.id) {
-      // Navigation vers la page de modification (à implémenter)
-      console.log('Modifier le véhicule', this.vehicule.id);
+      this.router.navigate(['/admin/modifier-vehicule', this.vehicule.id]);
     }
   }
 }

@@ -1,5 +1,12 @@
 <div class="content">
-    <div class="container-fluid">
+    <!-- Loading state pour les statistiques principales -->
+    
+    <div *ngIf="!areMainStatsLoaded" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Chargement des statistiques...</p>
+  </div>
+
+    <div class="container-fluid" *ngIf="areMainStatsLoaded">
         <!-- En-tête du Dashboard -->
         <div class="row mb-4">
             <div class="col-12">
@@ -9,91 +16,34 @@
         </div>
 
         <!-- Statistiques principales du parc automobile -->
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="row stats-row" *ngIf="areMainStatsLoaded">
+            <div class="col-lg-3 col-md-6 col-sm-6" *ngFor="let stat of getStatsArray(); let i = index" 
+                 [style.animation-delay]="(i * 0.1) + 's'">
                 <mat-card class="card-stats">
                     <mat-card-header>
-                        <div class="card-icon" style="background: linear-gradient(60deg, #26c6da, #00acc1);">
-                            <mat-icon>directions_car</mat-icon>
+                        <div class="card-icon" [ngStyle]="stat.style">
+                            <mat-icon>{{ stat.icon }}</mat-icon>
                         </div>
-                        <mat-card-title>Total Véhicules</mat-card-title>
-                        <mat-card-subtitle>Flotte complète</mat-card-subtitle>
+                        <mat-card-title>{{ stat.title }}</mat-card-title>
+                        <mat-card-subtitle>{{ stat.subtitle }}</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content>
-                        <h3 class="card-title">{{ parkingStats.totalVehicules }}</h3>
+                        <h3 class="card-title">{{ stat.value }}</h3>
                     </mat-card-content>
                     <div class="mat-card-footer">
                         <div class="stats">
-                            <mat-icon>local_shipping</mat-icon>
-                            Véhicules enregistrés
-                        </div>
-                    </div>
-                </mat-card>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <mat-card class="card-stats">
-                    <mat-card-header>
-                        <div class="card-icon" style="background: linear-gradient(60deg, #66bb6a, #43a047);">
-                            <mat-icon>check_circle</mat-icon>
-                        </div>
-                        <mat-card-title>Véhicules Disponibles</mat-card-title>
-                        <mat-card-subtitle>Prêts pour mission</mat-card-subtitle>
-                    </mat-card-header>
-                    <mat-card-content>
-                        <h3 class="card-title">{{ parkingStats.vehiculesDisponibles }}</h3>
-                    </mat-card-content>
-                    <div class="mat-card-footer">
-                        <div class="stats">
-                            <mat-icon>done</mat-icon>
-                            {{ calculatePercentage(parkingStats.vehiculesDisponibles, parkingStats.totalVehicules) }}% de la flotte
-                        </div>
-                    </div>
-                </mat-card>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <mat-card class="card-stats">
-                    <mat-card-header>
-                        <div class="card-icon" style="background: linear-gradient(60deg, #ffa726, #fb8c00);">
-                            <mat-icon>assignment</mat-icon>
-                        </div>
-                        <mat-card-title>Missions en Cours</mat-card-title>
-                        <mat-card-subtitle>Véhicules sur la route</mat-card-subtitle>
-                    </mat-card-header>
-                    <mat-card-content>
-                        <h3 class="card-title">{{ parkingStats.vehiculesEnMission }}</h3>
-                    </mat-card-content>
-                    <div class="mat-card-footer">
-                        <div class="stats">
-                            <mat-icon>timeline</mat-icon>
-                            Véhicules actifs
-                        </div>
-                    </div>
-                </mat-card>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <mat-card class="card-stats">
-                    <mat-card-header>
-                        <div class="card-icon" style="background: linear-gradient(60deg, #ef5350, #e53935);">
-                            <mat-icon>build</mat-icon>
-                        </div>
-                        <mat-card-title>Maintenance/Réparation</mat-card-title>
-                        <mat-card-subtitle>Véhicules indisponibles</mat-card-subtitle>
-                    </mat-card-header>
-                    <mat-card-content>
-                        <h3 class="card-title">{{ getTotalMaintenanceReparation() }}</h3>
-                    </mat-card-content>
-                    <div class="mat-card-footer">
-                        <div class="stats">
-                            <mat-icon>warning</mat-icon>
-                            Maintenance requise
+                            <mat-icon>{{ stat.footerIcon }}</mat-icon>
+                            {{ stat.footerText }}
                         </div>
                     </div>
                 </mat-card>
             </div>
         </div>
+
+        
         
         <!-- Alertes et Indicateurs -->
-        <div class="row">
+        <div class="row" *ngIf="areMainStatsLoaded">
             <div class="col-md-12">
                 <mat-card>
                     <mat-card-header>
@@ -145,7 +95,7 @@
         </div>
         
         <!-- Coûts et Budget -->
-        <div class="row">
+        <div class="row" *ngIf="areMainStatsLoaded">
             <div class="col-md-6">
                 <mat-card>
                     <mat-card-header>
@@ -193,11 +143,11 @@
                         <mat-card-subtitle>Dernières activités de la flotte</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content>
-                        <div *ngIf="missionsRecentes.length > 0; else noMissions">
+                        <div *ngIf="!isLoadingMissions && missionsRecentes.length > 0; else noOrLoadingMissions">
                             <div class="mission-item" *ngFor="let mission of missionsRecentes">
                                 <div class="mission-info">
-                                    <strong>{{ mission.conducteur || 'Conducteur non assigné' }}</strong>
-                                    <span class="mission-destination">{{ mission.destination || mission.lieuDepart + ' → ' + mission.lieuArrivee }}</span>
+                                    <strong>{{ mission.conducteur.nom + ' ' + mission.conducteur.prenom || 'Conducteur non assigné' }}</strong>
+                                    <span class="mission-destination">{{ mission.destination || mission.lieuDepart + ' → ' + mission.lieuDestination }}</span>
                                     <small class="text-muted">{{ mission.vehicule?.immatriculation || mission.vehicule }}</small>
                                 </div>
                                 <mat-chip [color]="getStatutColor(mission.statut)" selected>
@@ -205,8 +155,12 @@
                                 </mat-chip>
                             </div>
                         </div>
-                        <ng-template #noMissions>
-                            <p class="text-center text-muted">Aucune mission récente</p>
+                        <ng-template #noOrLoadingMissions>
+                            <div *ngIf="isLoadingMissions" class="text-center">
+                                <mat-spinner diameter="30" strokeWidth="3"></mat-spinner>
+                                <p class="text-muted">Chargement des missions...</p>
+                            </div>
+                            <p *ngIf="!isLoadingMissions" class="text-center text-muted">Aucune mission récente</p>
                         </ng-template>
                     </mat-card-content>
                 </mat-card>
@@ -214,7 +168,7 @@
         </div>
         
         <!-- Véhicules nécessitant une attention -->
-        <div class="row" *ngIf="vehiculesAttention.length > 0">
+        <div class="row" *ngIf="isAllDataLoaded && vehiculesAttention.length > 0">
             <div class="col-md-12">
                 <mat-card>
                     <mat-card-header>

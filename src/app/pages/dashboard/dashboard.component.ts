@@ -3,9 +3,12 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { DashboardService, DashboardStats } from '../../services/dashboard.service';
+import { Mission } from '../../models/mission';
+import { Vehicule } from '../../models/vehicule';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,6 +18,7 @@ import { DashboardService, DashboardStats } from '../../services/dashboard.servi
     MatCardModule, 
     MatIconModule, 
     MatProgressBarModule,
+    MatProgressSpinnerModule,
     MatChipsModule,
     MatButtonModule
   ],
@@ -61,7 +65,11 @@ export class DashboardComponent implements OnInit {
   // Missions récentes
   missionsRecentes: any[] = [];
 
+  // États de chargement séparés
   isLoading = true;
+  isLoadingMissions = true;
+  isLoadingVehicules = true;
+  isLoadingMaintenances = true;
 
   constructor(private dashboardService: DashboardService) { }
 
@@ -103,18 +111,18 @@ export class DashboardComponent implements OnInit {
       error: (error) => {
         console.error('Erreur lors du chargement des statistiques:', error);
         this.isLoading = false;
-        // Garder les données par défaut en cas d'erreur
-        //this.setDefaultData();
       }
     });
 
     // Charger les missions en cours
     this.dashboardService.getMissionsEnCours().subscribe({
       next: (missions) => {
-        this.missionsRecentes = missions.slice(0, 5); // Les 5 dernières missions
+        this.missionsRecentes = missions.slice(0, 5);
+        this.isLoadingMissions = false;
       },
       error: (error) => {
         console.error('Erreur lors du chargement des missions:', error);
+        this.isLoadingMissions = false;
       }
     });
 
@@ -126,9 +134,11 @@ export class DashboardComponent implements OnInit {
           probleme: `Visite technique échue le ${new Date(v.dateProchainerVisiteTechnique).toLocaleDateString()}`,
           priorite: 'haute'
         }));
+        this.isLoadingVehicules = false;
       },
       error: (error) => {
         console.error('Erreur lors du chargement des véhicules attention:', error);
+        this.isLoadingVehicules = false;
       }
     });
 
@@ -141,9 +151,11 @@ export class DashboardComponent implements OnInit {
           priorite: 'moyenne'
         }));
         this.vehiculesAttention = [...this.vehiculesAttention, ...maintenancesAttention];
+        this.isLoadingMaintenances = false;
       },
       error: (error) => {
         console.error('Erreur lors du chargement des maintenances:', error);
+        this.isLoadingMaintenances = false;
       }
     });
   }
@@ -201,9 +213,61 @@ export class DashboardComponent implements OnInit {
     return value ?? 0;
   }
 
+  // Vérifier si tous les chargements sont terminés
+  get isAllDataLoaded(): boolean {
+    return !this.isLoading && !this.isLoadingMissions && !this.isLoadingVehicules && !this.isLoadingMaintenances;
+  }
+
+  // Vérifier si au moins les données principales sont chargées
+  get areMainStatsLoaded(): boolean {
+    return !this.isLoading;
+  }
+
   // Méthode pour calculer le total des véhicules en maintenance/réparation
   getTotalMaintenanceReparation(): number {
     return this.safeNumber(this.parkingStats.vehiculesEnReparation) + 
            this.safeNumber(this.parkingStats.vehiculesEnMaintenance);
+  }
+
+  // Méthode pour obtenir le tableau des statistiques avec leurs styles
+  getStatsArray(): any[] {
+    return [
+      {
+        title: 'Total Véhicules',
+        subtitle: 'Flotte complète',
+        value: this.parkingStats.totalVehicules,
+        icon: 'directions_car',
+        style: { 'background': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
+        footerIcon: 'local_shipping',
+        footerText: 'Véhicules enregistrés'
+      },
+      {
+        title: 'Véhicules Disponibles',
+        subtitle: 'Prêts pour mission',
+        value: this.parkingStats.vehiculesDisponibles,
+        icon: 'check_circle',
+        style: { 'background': 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
+        footerIcon: 'done',
+        footerText: `${this.calculatePercentage(this.parkingStats.vehiculesDisponibles, this.parkingStats.totalVehicules)}% de la flotte`
+      },
+      {
+        title: 'Missions en Cours',
+        subtitle: 'Véhicules sur la route',
+        value: this.parkingStats.vehiculesEnMission,
+        icon: 'assignment',
+        style: { 'background': 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)' },
+        footerIcon: 'timeline',
+        footerText: 'Véhicules actifs'
+      },
+      {
+        title: 'Maintenance/Réparation',
+        subtitle: 'Véhicules indisponibles',
+        value: this.getTotalMaintenanceReparation(),
+        icon: 'build',
+        style: { 'background': 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)' },
+        footerIcon: 'warning',
+        footerText: 'Maintenance requise'
+      }
+    ];
   }
 }

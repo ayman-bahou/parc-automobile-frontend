@@ -1,0 +1,186 @@
+
+<div class="missions-container" >
+  <!-- Loading state -->
+      <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Chargement de missions...</p>
+  </div>
+  <div class="container-fluid" *ngIf="!loading">
+    <!-- Header Section -->
+    <div class="missions-header" >
+      <div class="header-content">
+        <div class="header-text">
+          <h1 class="page-title">
+            <mat-icon class="title-icon">assignment</mat-icon>
+            Mes Missions
+          </h1>
+          <p class="page-subtitle">Gérez et suivez vos missions assignées</p>
+        </div>
+        <div class="header-stats" *ngIf="!loading && !error">
+          <div class="stat-card">
+            <span class="stat-number">{{ missions.length }}</span>
+            <span class="stat-label">Total</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">{{ getMissionsCount('EN_COURS') }}</span>
+            <span class="stat-label">En cours</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">{{ getMissionsCount('TERMINEE') }}</span>
+            <span class="stat-label">Terminées</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Section -->
+    <div class="missions-content">
+      <!-- Filtres par statut -->
+      <div *ngIf="!loading && !error && missions.length > 0" class="filters-section">
+        <div class="filters-header">
+          <h3>Filtrer par statut</h3>
+        </div>
+        <div class="filter-buttons">
+          <button 
+            mat-stroked-button 
+            [class.active]="isFilterActive('ALL')"
+            (click)="filterByStatus('ALL')"
+            class="filter-btn">
+            <mat-icon>list</mat-icon>
+            Toutes ({{ missions.length }})
+          </button>
+          <button 
+            mat-stroked-button 
+            [class.active]="isFilterActive('EN_COURS')"
+            (click)="filterByStatus('EN_COURS')"
+            class="filter-btn en-cours">
+            <mat-icon>play_circle_filled</mat-icon>
+            En cours ({{ getMissionsCount('EN_COURS') }})
+          </button>
+          <button 
+            mat-stroked-button 
+            [class.active]="isFilterActive('TERMINEE')"
+            (click)="filterByStatus('TERMINEE')"
+            class="filter-btn terminee">
+            <mat-icon>check_circle</mat-icon>
+            Terminées ({{ getMissionsCount('TERMINEE') }})
+          </button>
+          <button 
+            mat-stroked-button 
+            [class.active]="isFilterActive('ANNULEE')"
+            (click)="filterByStatus('ANNULEE')"
+            class="filter-btn annulee">
+            <mat-icon>cancel</mat-icon>
+            Annulées ({{ getMissionsCount('ANNULEE') }})
+          </button>
+        </div>
+      </div>
+
+      
+
+      <!-- Error state -->
+      <div *ngIf="error" class="error-container">
+        <mat-icon class="error-icon">error_outline</mat-icon>
+        <h3>Oops ! Une erreur s'est produite</h3>
+        <p>{{ error }}</p>
+        <button mat-raised-button color="primary" (click)="loadMissions()">
+          <mat-icon>refresh</mat-icon>
+          Réessayer
+        </button>
+      </div>
+
+      <!-- Empty state -->
+      <div *ngIf="!loading && !error && filteredMissions.length === 0 && missions.length > 0" class="empty-container">
+        <div class="empty-illustration">
+          <mat-icon>filter_list_off</mat-icon>
+        </div>
+        <h3>Aucune mission pour ce filtre</h3>
+        <p>Aucune mission ne correspond au statut sélectionné. Essayez un autre filtre.</p>
+      </div>
+
+      <!-- Empty state - pas de missions du tout -->
+      <div *ngIf="!loading && !error && missions.length === 0" class="empty-container">
+        <div class="empty-illustration">
+          <mat-icon>assignment_turned_in</mat-icon>
+        </div>
+        <h3>Aucune mission assignée</h3>
+        <p>Vous n'avez pas encore de missions. Elles apparaîtront ici dès qu'elles vous seront assignées.</p>
+      </div>
+
+      <!-- Missions grid -->
+      <div *ngIf="!loading && !error && filteredMissions.length > 0" class="missions-grid">
+        <div class="mission-card-wrapper" *ngFor="let mission of filteredMissions; trackBy: trackByMission">
+          <div class="mission-card" [ngClass]="'status-' + mission.statut.toLowerCase()">
+            
+            <!-- Card Header -->
+            <div class="card-header">
+              <div class="mission-id">
+                <mat-icon>assignment</mat-icon>
+                Mission #{{ mission.id }}
+              </div>
+              <div class="status-badge" [ngClass]="'status-' + mission.statut.toLowerCase()">
+                <mat-icon>{{ getStatusIcon(mission.statut) }}</mat-icon>
+                {{ getStatutLabel(mission.statut) }}
+              </div>
+            </div>
+
+            <!-- Card Content -->
+            <div class="card-content">
+              <!-- Route Section -->
+              <div class="route-section">
+                <div class="route-item departure">
+                  <mat-icon>trip_origin</mat-icon>
+                  <div class="route-details">
+                    <span class="route-label">Départ</span>
+                    <span class="route-value">{{ mission.lieuDepart }}</span>
+                  </div>
+                </div>
+                <div class="route-item destination">
+                  <mat-icon>place</mat-icon>
+                  <div class="route-details">
+                    <span class="route-label">Destination</span>
+                    <span class="route-value">{{ mission.lieuDestination }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Informations essentielles -->
+              <div class="essential-info">
+                <div class="info-item vehicule" *ngIf="mission.vehicule">
+                  <mat-icon>directions_car</mat-icon>
+                  <div class="info-content">
+                    <span class="info-label">Véhicule</span>
+                    <span class="info-value">{{ mission.vehicule.marque }} {{ mission.vehicule.modele }}</span>
+                  </div>
+                </div>
+                
+                <div class="info-item date">
+                  <mat-icon>schedule</mat-icon>
+                  <div class="info-content">
+                    <span class="info-label">Date</span>
+                    <span class="info-value">{{ formatDate(mission.dateDebut) }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Actions -->
+            <div class="card-actions">
+              <button mat-stroked-button class="action-btn secondary">
+                <mat-icon>visibility</mat-icon>
+                Détails
+              </button>
+              <button 
+                *ngIf="mission.statut === 'EN_COURS'" 
+                mat-raised-button 
+                class="action-btn primary">
+                <mat-icon>flag</mat-icon>
+                Terminer
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

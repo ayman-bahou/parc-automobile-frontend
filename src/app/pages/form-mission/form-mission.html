@@ -1,0 +1,166 @@
+<div class="form-mission-container">
+  <!-- Header avec informations du véhicule -->
+  <mat-card class="vehicle-info-card" *ngIf="vehicule">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>directions_car</mat-icon>
+        Véhicule sélectionné
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="vehicle-details">
+        <div class="vehicle-item">
+          <strong>Immatriculation:</strong> {{ vehicule.immatriculation }}
+        </div>
+        <div class="vehicle-item">
+          <strong>Marque/Modèle:</strong> {{ vehicule.marque }} {{ vehicule.modele }}
+        </div>
+        <div class="vehicle-item">
+          <strong>Année:</strong> {{ vehicule.annee }}
+        </div>
+        <div class="vehicle-item">
+          <strong>Kilométrage actuel:</strong> {{ vehicule.kilometrageActuel | number }} km
+        </div>
+        <div class="vehicle-item">
+          <mat-chip [style.background-color]="getStatutColor(vehicule.statut)">
+            <mat-icon>{{ getStatutIcon(vehicule.statut) }}</mat-icon>
+            {{ getStatutLabel(vehicule.statut) }}
+          </mat-chip>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Spinner de chargement -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+    <p>Chargement des données...</p>
+  </div>
+
+  <!-- Formulaire de création de mission -->
+  <mat-card class="form-card" *ngIf="!isLoading">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>assignment</mat-icon>
+        Créer une nouvelle mission
+      </mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <form [formGroup]="missionForm" (ngSubmit)="onSubmit()" class="mission-form">
+        
+        <!-- Objet de la mission -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Objet de la mission *</mat-label>
+          <input matInput formControlName="objet" placeholder="Ex: Déplacement client, formation...">
+          <mat-icon matSuffix>title</mat-icon>
+          <mat-error *ngIf="objet?.hasError('required')">
+            L'objet de la mission est obligatoire
+          </mat-error>
+          <mat-error *ngIf="objet?.hasError('minlength')">
+            L'objet doit contenir au moins 3 caractères
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Description -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="3" 
+                   placeholder="Description détaillée de la mission (optionnel)"></textarea>
+          <mat-icon matSuffix>description</mat-icon>
+        </mat-form-field>
+
+        <!-- Lieu de départ et destination en ligne -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Lieu de départ *</mat-label>
+            <input matInput formControlName="lieuDepart" placeholder="Ex: Siège social, Bureau...">
+            <mat-icon matSuffix>place</mat-icon>
+            <mat-error *ngIf="lieuDepart?.hasError('required')">
+              Le lieu de départ est obligatoire
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Lieu de destination *</mat-label>
+            <input matInput formControlName="lieuDestination" placeholder="Ex: Client, Formation...">
+            <mat-icon matSuffix>location_on</mat-icon>
+            <mat-error *ngIf="lieuDestination?.hasError('required')">
+              Le lieu de destination est obligatoire
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Dates en ligne -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Date de début *</mat-label>
+            <input matInput [matDatepicker]="dateDebutPicker" formControlName="dateDebut">
+            <mat-datepicker-toggle matSuffix [for]="dateDebutPicker"></mat-datepicker-toggle>
+            <mat-datepicker #dateDebutPicker></mat-datepicker>
+            <mat-error *ngIf="dateDebut?.hasError('required')">
+              La date de début est obligatoire
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Date de fin (optionnel)</mat-label>
+            <input matInput [matDatepicker]="dateFinPicker" formControlName="dateFin">
+            <mat-datepicker-toggle matSuffix [for]="dateFinPicker"></mat-datepicker-toggle>
+            <mat-datepicker #dateFinPicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <!-- Conducteur (lecture seule - utilisateur connecté) -->
+        <mat-form-field appearance="outline" class="full-width" *ngIf="conducteur">
+          <mat-label>Conducteur assigné</mat-label>
+          <input matInput [value]="conducteur.nom + ' ' + conducteur.prenom" readonly>
+          <mat-icon matSuffix>person</mat-icon>
+        </mat-form-field>
+
+        <!-- Kilométrage actuel -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Kilométrage de départ *</mat-label>
+          <input matInput 
+                 formControlName="kilometrageDepart" 
+                 type="number" 
+                 placeholder="Kilométrage relevé au départ"
+                 [value]="vehicule?.kilometrageActuel">
+          <mat-icon matSuffix>speed</mat-icon>
+          <mat-hint>Kilométrage actuel du véhicule: {{ vehicule?.kilometrageActuel | number }} km</mat-hint>
+          <mat-error *ngIf="kilometrageDepart?.hasError('required')">
+            Le kilométrage de départ est obligatoire
+          </mat-error>
+          <mat-error *ngIf="kilometrageDepart?.hasError('min')">
+            Le kilométrage doit être un nombre positif
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Observations -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Observations</mat-label>
+          <textarea matInput formControlName="observations" rows="3" 
+                   placeholder="Observations particulières (optionnel)"></textarea>
+          <mat-icon matSuffix>note</mat-icon>
+        </mat-form-field>
+
+      </form>
+    </mat-card-content>
+
+    <!-- Actions -->
+    <mat-card-actions align="end" class="form-actions">
+      <button mat-button type="button" (click)="onCancel()" [disabled]="isSubmitting">
+        <mat-icon>cancel</mat-icon>
+        Annuler
+      </button>
+      <button mat-raised-button color="primary" 
+              type="submit" 
+              (click)="onSubmit()" 
+              [disabled]="isSubmitting || missionForm.invalid">
+        <mat-spinner *ngIf="isSubmitting" diameter="20" class="button-spinner"></mat-spinner>
+        <mat-icon *ngIf="!isSubmitting">save</mat-icon>
+        {{ isSubmitting ? 'Création...' : 'Créer la mission' }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

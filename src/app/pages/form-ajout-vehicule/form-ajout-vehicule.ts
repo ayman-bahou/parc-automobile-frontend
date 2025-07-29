@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -40,6 +40,9 @@ import { Vehicule, TypeCarburant, StatutVehicule } from '../../models/vehicule';
 export class FormAjoutVehicule implements OnInit {
   vehiculeForm!: FormGroup;
   isLoading = false;
+  isEditMode = false;
+  vehiculeId: number | null = null;
+  vehicule: Vehicule | null = null;
   
   // Options pour les selects
   marques = [
@@ -73,11 +76,21 @@ export class FormAjoutVehicule implements OnInit {
     private formBuilder: FormBuilder,
     private vehiculeService: VehiculeService,
     private router: Router,
+    private route: ActivatedRoute,
     private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.initializeForm();
+    
+    // Vérifier si on est en mode modification
+    this.route.params.subscribe(params => {
+      if (params['id']) {
+        this.isEditMode = true;
+        this.vehiculeId = +params['id'];
+        this.loadVehiculeForEdit(this.vehiculeId);
+      }
+    });
   }
 
   initializeForm(): void {
@@ -106,30 +119,90 @@ export class FormAjoutVehicule implements OnInit {
     });
   }
 
+  loadVehiculeForEdit(id: number): void {
+    this.isLoading = true;
+    this.vehiculeService.getVehiculeById(id).subscribe({
+      next: (vehicule) => {
+        this.vehicule = vehicule;
+        this.populateForm(vehicule);
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Erreur lors du chargement du véhicule:', error);
+        this.snackBar.open('Erreur lors du chargement du véhicule', 'Fermer', {
+          duration: 3000,
+          panelClass: ['error-snackbar']
+        });
+        this.isLoading = false;
+        this.router.navigate(['/admin/vehicules']);
+      }
+    });
+  }
+
+  populateForm(vehicule: Vehicule): void {
+    this.vehiculeForm.patchValue({
+      immatriculation: vehicule.immatriculation,
+      marque: vehicule.marque,
+      modele: vehicule.modele,
+      annee: vehicule.annee,
+      kilometrageActuel: vehicule.kilometrageActuel,
+      typeCarburant: vehicule.typeCarburant,
+      dateMiseEnService: vehicule.dateMiseEnService ? new Date(vehicule.dateMiseEnService) : null,
+      dateDerniereVisiteTechnique: vehicule.dateDerniereVisiteTechnique ? new Date(vehicule.dateDerniereVisiteTechnique) : null,
+      dateProchainerVisiteTechnique: vehicule.dateProchainerVisiteTechnique ? new Date(vehicule.dateProchainerVisiteTechnique) : null,
+      statut: vehicule.statut,
+      consommationMoyenne: vehicule.consommationMoyenne,
+      capaciteReservoir: vehicule.capaciteReservoir
+    });
+  }
+
   onSubmit(): void {
     if (this.vehiculeForm.valid) {
       this.isLoading = true;
       
       const vehiculeData: Partial<Vehicule> = this.vehiculeForm.value;
       
-      this.vehiculeService.createVehicule(vehiculeData as Vehicule).subscribe({
-        next: (response) => {
-          this.isLoading = false;
-          this.snackBar.open('Véhicule ajouté avec succès !', 'Fermer', {
-            duration: 3000,
-            panelClass: ['success-snackbar']
-          });
-          this.router.navigate(['/admin/vehicules']);
-        },
-        error: (error) => {
-          this.isLoading = false;
-          console.error('Erreur lors de l\'ajout du véhicule:', error);
-          this.snackBar.open('Erreur lors de l\'ajout du véhicule', 'Fermer', {
-            duration: 3000,
-            panelClass: ['error-snackbar']
-          });
-        }
-      });
+      if (this.isEditMode && this.vehiculeId) {
+        // Mode modification
+        this.vehiculeService.updateVehicule(this.vehiculeId, vehiculeData as Vehicule).subscribe({
+          next: (response) => {
+            this.isLoading = false;
+            this.snackBar.open('Véhicule modifié avec succès !', 'Fermer', {
+              duration: 3000,
+              panelClass: ['success-snackbar']
+            });
+            this.router.navigate(['/admin/vehicules', this.vehiculeId]);
+          },
+          error: (error) => {
+            this.isLoading = false;
+            console.error('Erreur lors de la modification du véhicule:', error);
+            this.snackBar.open('Erreur lors de la modification du véhicule', 'Fermer', {
+              duration: 3000,
+              panelClass: ['error-snackbar']
+            });
+          }
+        });
+      } else {
+        // Mode ajout
+        this.vehiculeService.createVehicule(vehiculeData as Vehicule).subscribe({
+          next: (response) => {
+            this.isLoading = false;
+            this.snackBar.open('Véhicule ajouté avec succès !', 'Fermer', {
+              duration: 3000,
+              panelClass: ['success-snackbar']
+            });
+            this.router.navigate(['/admin/vehicules']);
+          },
+          error: (error) => {
+            this.isLoading = false;
+            console.error('Erreur lors de l\'ajout du véhicule:', error);
+            this.snackBar.open('Erreur lors de l\'ajout du véhicule', 'Fermer', {
+              duration: 3000,
+              panelClass: ['error-snackbar']
+            });
+          }
+        });
+      }
     } else {
       this.markFormGroupTouched();
       this.snackBar.open('Veuillez corriger les erreurs dans le formulaire', 'Fermer', {
