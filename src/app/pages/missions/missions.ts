@@ -40,7 +40,7 @@ export class Missions implements OnInit {
   }
 
   loadMissions(): void {
-    const userId = this.authService.getUserId();
+    const userId = this.authService.getCurrentUserId();
     
     if (!userId) {
       this.error = "Impossible de récupérer l'ID de l'utilisateur";

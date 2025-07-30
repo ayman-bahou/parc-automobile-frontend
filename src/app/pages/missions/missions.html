@@ -157,8 +157,12 @@
                 <div class="info-item date">
                   <mat-icon>schedule</mat-icon>
                   <div class="info-content">
-                    <span class="info-label">Date</span>
+                    <span class="info-label">DU</span>
                     <span class="info-value">{{ formatDate(mission.dateDebut) }}</span>
+                  </div>
+                  <div class="info-content" *ngIf="mission.dateFin">
+                    <span class="info-label">AU</span>
+                    <span class="info-value">{{ formatDate(mission.dateFin) }}</span>
                   </div>
                 </div>
               </div>

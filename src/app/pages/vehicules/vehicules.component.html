@@ -177,6 +177,15 @@
             <mat-icon>logout</mat-icon>
             Libérer
           </button>
+          <button 
+            mat-button 
+            color="primary" 
+            *ngIf="vehicule.statut === 'EN_MISSION' && isCurrentUserConducteur(vehicule)"
+            matTooltip="Ajouter une consommation"
+            (click)="$event.stopPropagation(); ajouterConsommation(vehicule)">
+            <mat-icon>local_gas_station</mat-icon>
+            Consommation
+          </button>
         </mat-card-actions>
       </mat-card>
     </div>

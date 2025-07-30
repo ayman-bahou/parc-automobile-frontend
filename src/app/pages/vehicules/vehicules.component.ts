@@ -10,6 +10,9 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -20,6 +23,7 @@ import {  StatutVehicule, TypeCarburant , Vehicule, StatutMission } from '../../
 import { Mission } from '../../models/mission';
 import { Utilisateur } from '../../models/utilisateur';
 import { DialogLiberationVehiculeComponent } from './dialog-liberation-vehicule.component';
+import { FormConsommationComponent } from '../../components/form-consommation/form-consommation.component';
 
 @Component({
   selector: 'app-vehicules',
@@ -36,6 +40,9 @@ import { DialogLiberationVehiculeComponent } from './dialog-liberation-vehicule.
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     ReactiveFormsModule,
     MatSnackBarModule
   ],
@@ -402,5 +409,22 @@ export class VehiculesComponent implements OnInit {
 
   ajouterVehicule(): void {
     this.router.navigate(['/admin/form-ajout-vehicule']);
+  }
+
+  ajouterConsommation(vehicule: Vehicule): void {
+    const dialogRef = this.dialog.open(FormConsommationComponent, {
+      width: '600px',
+      data: { vehicule, utilisateurConnecte: this.utilisateurConnecte?.id }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.snackBar.open('Consommation ajoutée avec succès', 'Fermer', {
+          duration: 3000,
+          panelClass: ['success-snackbar']
+        });
+        // Optionnel : recharger les données ou mettre à jour l'affichage
+      }
+    });
   }
 }

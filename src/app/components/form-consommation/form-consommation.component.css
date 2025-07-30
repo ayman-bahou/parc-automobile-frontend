@@ -1,0 +1,59 @@
+.form-consommation-container {
+  min-width: 500px;
+  max-width: 600px;
+}
+
+.vehicule-info {
+  background: #f5f5f5;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid #1976d2;
+}
+
+.vehicule-info h3 {
+  margin: 0 0 8px 0;
+  color: #1976d2;
+  font-weight: 600;
+}
+
+.vehicule-info p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.consommation-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.mat-mdc-dialog-actions {
+  padding: 16px 24px;
+  gap: 12px;
+}
+
+/* Styles pour les messages de succès et d'erreur */
+.success-snackbar {
+  --mdc-snackbar-container-color: #4caf50;
+  --mdc-snackbar-supporting-text-color: white;
+}
+
+.error-snackbar {
+  --mdc-snackbar-container-color: #f44336;
+  --mdc-snackbar-supporting-text-color: white;
+}
+
+/* Style pour le bouton de consommation */
+.vehicule-card .mat-mdc-button {
+  margin-right: 8px;
+}
+
+.vehicule-card .mat-mdc-button:last-child {
+  margin-right: 0;
+}

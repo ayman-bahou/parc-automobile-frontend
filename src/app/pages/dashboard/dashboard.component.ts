@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,6 +9,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { DashboardService, DashboardStats } from '../../services/dashboard.service';
 import { Mission } from '../../models/mission';
 import { Vehicule } from '../../models/vehicule';
+import { AuthService } from '../../services/auth-service/auth-service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,8 +27,13 @@ import { Vehicule } from '../../models/vehicule';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   // Statistiques du parc automobile
+
+  // ✅ OPTIMISÉ : Une seule propriété pour l'ID utilisateur
+  private userId: number | null = null;
+  private destroy$ = new Subject<void>();
+
   parkingStats = {
     totalVehicules: 0,
     vehiculesDisponibles: 0,
@@ -71,15 +78,36 @@ export class DashboardComponent implements OnInit {
   isLoadingVehicules = true;
   isLoadingMaintenances = true;
 
-  constructor(private dashboardService: DashboardService) { }
+  constructor(
+    private dashboardService: DashboardService,
+    private authService: AuthService
+  ) { }
 
   ngOnInit(): void {
-    this.loadDashboardData();
+    // ✅ VERSION OBSERVABLE : S'abonner aux changements d'utilisateur
+    this.authService.currentUser$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(user => {
+        if (user?.id) {
+          this.userId = user.id;
+          this.loadDashboardData();
+        } else {
+          console.error('Utilisateur non connecté');
+          // Redirection vers login ou gestion d'erreur
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadDashboardData(): void {
+    if (!this.userId) return;
+
     // Charger les statistiques principales du dashboard
-    this.dashboardService.getDashboardStats().subscribe({
+    this.dashboardService.getDashboardStats(this.userId).subscribe({
       next: (stats: DashboardStats) => {
         console.log('Stats reçues du backend:', stats);
         
