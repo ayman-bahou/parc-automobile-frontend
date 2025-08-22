@@ -61,7 +61,29 @@ export const routes: Routes = [
       {
         path: 'modifier-vehicule/:id',
         loadComponent: () => import('./pages/form-ajout-vehicule/form-ajout-vehicule').then(m => m.FormAjoutVehicule)
+      },
+      {
+        path: 'signalements',
+        loadComponent: () => import('./pages/signalement/signalement').then(m => m.SignalementComponent)
+      },
+      {
+        path: 'reparations',
+        loadComponent: () => import('./pages/reparations/reparations.component').then(m => m.ReparationsComponent)
+      },
+      {
+        path: 'reparations/new',
+        loadComponent: () => import('./pages/form-reparation/form-reparation.component').then(m => m.FormReparationComponent)
+      },
+      {
+        path: 'reparations/:id/edit',
+        loadComponent: () => import('./pages/form-reparation/form-reparation.component').then(m => m.FormReparationComponent)
+      },
+      {
+        path: 'reparations/:idSignalement',
+        loadComponent: () => import('./pages/form-reparation/form-reparation.component').then(m => m.FormReparationComponent)
       }
+
+
     ]
   },
   {

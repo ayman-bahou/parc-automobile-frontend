@@ -1,0 +1,276 @@
+<div class="form-container">
+  <!-- Header section -->
+  <div class="header-section">
+    <div class="title-and-actions">
+      <div class="page-title">
+        <i class="fas fa-tools fa-lg" style="color: #667eea;"></i>
+        <div>
+          <h1>{{ isEditMode ? 'Modifier' : 'Nouvelle' }} Réparation</h1>
+          <p class="page-subtitle">{{ isEditMode ? 'Modification des informations de la réparation' : 'Enregistrement d\'une nouvelle réparation' }}</p>
+        </div>
+      </div>
+      <div class="actions-group">
+        <button class="btn btn-outline-secondary" (click)="onCancel()" [disabled]="submitting">
+          <i class="fas fa-times"></i>
+          Annuler
+        </button>
+        <button 
+          class="btn btn-primary" 
+          (click)="onSubmit()" 
+          [disabled]="submitting || reparationForm.invalid">
+          <i class="fas fa-save" [class.fa-spin]="submitting"></i>
+          {{ isEditMode ? 'Modifier' : 'Enregistrer' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div class="alert alert-danger" *ngIf="error">
+    <i class="fas fa-exclamation-triangle"></i>
+    {{ error }}
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-container" *ngIf="loading">
+    <div class="spinner-border" role="status"></div>
+    <p>Chargement des données...</p>
+  </div>
+
+  <!-- Formulaire -->
+  <div class="form-section" *ngIf="!loading">
+    <form [formGroup]="reparationForm" (ngSubmit)="onSubmit()">
+      
+      <!-- Informations générales -->
+      <div class="form-card">
+        <div class="card-header">
+          <h5>
+            <i class="fas fa-info-circle"></i>
+            Informations générales
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="form-grid">
+            
+            
+
+            <!-- Type de réparation -->
+            <div class="form-group">
+              <label class="form-label required">Type de réparation</label>
+              <select 
+                class="form-select"
+                formControlName="typeReparation"
+                [class.is-invalid]="typeReparation?.invalid && typeReparation?.touched">
+                <option value="">Sélectionner un type</option>
+                <option 
+                  *ngFor="let option of getTypeReparationOptions()" 
+                  [value]="option.value">
+                  {{ option.label }}
+                </option>
+              </select>
+              <div class="invalid-feedback" *ngIf="typeReparation?.invalid && typeReparation?.touched">
+                Le type de réparation est obligatoire
+              </div>
+            </div>
+
+            <!-- Véhicule -->
+            <div class="form-group">
+              <label class="form-label required">Véhicule</label>
+              <select 
+                class="form-select"
+                formControlName="vehiculeId"
+                [class.is-invalid]="vehiculeId?.invalid && vehiculeId?.touched">
+                <option value="">Sélectionner un véhicule</option>
+                <option 
+                  *ngFor="let vehicule of vehicules" 
+                  [value]="vehicule.id">
+                  {{ vehicule.immatriculation }} - {{ vehicule.marque }} {{ vehicule.modele }}
+                </option>
+              </select>
+              <div class="invalid-feedback" *ngIf="vehiculeId?.invalid && vehiculeId?.touched">
+                Le véhicule est obligatoire
+              </div>
+            </div>
+
+         
+            
+          </div>
+
+          <!-- Description -->
+          <div class="form-group">
+            <label class="form-label required">Description</label>
+            <textarea 
+              class="form-control"
+              formControlName="description"
+              rows="3"
+              placeholder="Description détaillée de la réparation..."
+              [class.is-invalid]="description?.invalid && description?.touched"></textarea>
+            <div class="invalid-feedback" *ngIf="description?.invalid && description?.touched">
+              <div *ngIf="description?.errors?.['required']">La description est obligatoire</div>
+              <div *ngIf="description?.errors?.['minlength']">La description doit contenir au moins 10 caractères</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Informations financières -->
+      <div class="form-card">
+        <div class="card-header">
+          <h5>
+            <i class="fas fa-euro-sign"></i>
+            Informations financières
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="form-grid">
+            <!-- Coût des pièces -->
+            <div class="form-group">
+              <label class="form-label">Coût des pièces</label>
+              <div class="input-group">
+                <input 
+                  type="number" 
+                  class="form-control"
+                  formControlName="coutPieces"
+                  min="0"
+                  step="0.01"
+                  placeholder="0.00"
+                  [class.is-invalid]="coutPieces?.invalid && coutPieces?.touched">
+                <span class="input-group-text">€</span>
+              </div>
+              <div class="invalid-feedback" *ngIf="coutPieces?.invalid && coutPieces?.touched">
+                Le coût doit être positif
+              </div>
+            </div>
+
+            <!-- Coût main d'œuvre -->
+            <div class="form-group">
+              <label class="form-label">Coût main d'œuvre</label>
+              <div class="input-group">
+                <input 
+                  type="number" 
+                  class="form-control"
+                  formControlName="coutMainOeuvre"
+                  min="0"
+                  step="0.01"
+                  placeholder="0.00"
+                  [class.is-invalid]="coutMainOeuvre?.invalid && coutMainOeuvre?.touched">
+                <span class="input-group-text">€</span>
+              </div>
+              <div class="invalid-feedback" *ngIf="coutMainOeuvre?.invalid && coutMainOeuvre?.touched">
+                Le coût doit être positif
+              </div>
+            </div>
+
+            <!-- Coût total (calculé automatiquement) -->
+            <div class="form-group">
+              <label class="form-label">Coût total</label>
+              <div class="total-cost">
+                {{ formatCurrency(coutTotal) }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Informations complémentaires -->
+      <div class="form-card">
+        <div class="card-header">
+          <h5>
+            <i class="fas fa-plus-circle"></i>
+            Informations complémentaires
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="form-grid">
+            <!-- Kilométrage -->
+            <div class="form-group">
+              <label class="form-label">Kilométrage à la réparation</label>
+              <div class="input-group">
+                <input 
+                  type="number" 
+                  class="form-control"
+                  formControlName="kilometrageReparation"
+                  min="0"
+                  placeholder="0">
+                <span class="input-group-text">km</span>
+              </div>
+            </div>
+
+            <!-- Nom du garage -->
+            <div class="form-group">
+              <label class="form-label">Nom du garage</label>
+              <input 
+                type="text" 
+                class="form-control"
+                formControlName="nomGarage"
+                placeholder="Nom du garage ou de l'atelier">
+            </div>
+
+            <!-- Numéro de facture -->
+            <div class="form-group">
+              <label class="form-label">Numéro de facture</label>
+              <input 
+                type="text" 
+                class="form-control"
+                formControlName="numeroFacture"
+                placeholder="Numéro de facture">
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <!-- Date début réparation -->
+            <div class="form-group">
+              <label class="form-label">Date début réparation</label>
+              <input 
+                type="date" 
+                class="form-control"
+                formControlName="dateDebutReparation"
+                readonly>
+              <small class="form-text text-muted">{{ isEditMode ? 'Date de début de la réparation' : 'Date automatiquement définie à aujourd\'hui' }}</small>
+            </div>
+
+            <!-- Date fin réparation - visible seulement en mode édition et si la réparation est terminée -->
+            <div class="form-group" *ngIf="isEditMode && reparationForm.get('statut')?.value === StatutReparation.TERMINEE">
+              <label class="form-label">Date fin réparation</label>
+              <input 
+                type="date" 
+                class="form-control"
+                formControlName="dateFinReparation"
+                readonly>
+              <small class="form-text text-muted">Cette date est automatiquement définie lors de la finalisation de la réparation</small>
+            </div>
+          </div>
+
+          <!-- Observations -->
+          <div class="form-group">
+            <label class="form-label">Observations</label>
+            <textarea 
+              class="form-control"
+              formControlName="observations"
+              rows="4"
+              placeholder="Observations ou remarques supplémentaires..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions du formulaire -->
+      <div class="form-actions">
+        <button 
+          type="button" 
+          class="btn btn-outline-secondary" 
+          (click)="onCancel()" 
+          [disabled]="submitting">
+          <i class="fas fa-times"></i>
+          Annuler
+        </button>
+        <button 
+          type="submit" 
+          class="btn btn-primary" 
+          [disabled]="submitting || reparationForm.invalid">
+          <i class="fas fa-save" [class.fa-spin]="submitting"></i>
+          {{ isEditMode ? 'Modifier' : 'Enregistrer' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

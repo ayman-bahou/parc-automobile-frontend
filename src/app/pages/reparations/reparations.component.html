@@ -1,0 +1,245 @@
+<div class="reparations-container">
+  <!-- Header section -->
+  <div class="header-section">
+    <div class="title-and-actions">
+      <div class="page-title">
+        <i class="fas fa-tools fa-lg" style="color: #667eea;"></i>
+        <div>
+          <h1>Gestion des Réparations</h1>
+          <p class="page-subtitle">Suivi et gestion des réparations des véhicules</p>
+        </div>
+      </div>
+      <div class="actions-group">
+        <button class="btn btn-outline-primary" (click)="onRefresh()" [disabled]="loading">
+          <i class="fas fa-sync-alt" [class.fa-spin]="loading"></i>
+          Actualiser
+        </button>
+        <button class="btn btn-primary" (click)="onCreateReparation()">
+          <i class="fas fa-plus"></i>
+          Nouvelle Réparation
+        </button>
+      </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="filters-section">
+      <div class="filters-header">
+        <i class="fas fa-filter"></i>
+        <span>Filtres de recherche</span>
+      </div>
+      
+      <div class="filters-grid">
+        <!-- Recherche -->
+        <div class="form-group">
+          <label class="form-label">Rechercher</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            placeholder="Description, garage, facture..."
+            [(ngModel)]="searchTerm"
+            (input)="applyFilters()">
+        </div>
+
+        <!-- Statut -->
+        <div class="form-group">
+          <label class="form-label">Statut</label>
+          <select class="form-select" [(ngModel)]="selectedStatut" (change)="applyFilters()">
+            <option value="">Tous les statuts</option>
+            <option [value]="StatutReparation.EN_COURS">En Cours</option>
+            <option [value]="StatutReparation.TERMINEE">Terminée</option>
+          </select>
+        </div>
+
+        <!-- Type -->
+        <div class="form-group">
+          <label class="form-label">Type de réparation</label>
+          <select class="form-select" [(ngModel)]="selectedType" (change)="applyFilters()">
+            <option value="">Tous les types</option>
+            <option [value]="TypeReparation.VISITE_TECHNIQUE">Visite Technique</option>
+            <option [value]="TypeReparation.MAINTENANCE_PREVENTIVE">Maintenance Préventive</option>
+            <option [value]="TypeReparation.REPARATION_MOTEUR">Réparation Moteur</option>
+            <option [value]="TypeReparation.REPARATION_FREINS">Réparation Freins</option>
+            <option [value]="TypeReparation.REPARATION_TRANSMISSION">Réparation Transmission</option>
+            <option [value]="TypeReparation.REPARATION_SUSPENSION">Réparation Suspension</option>
+            <option [value]="TypeReparation.REPARATION_ELECTRIQUE">Réparation Électrique</option>
+            <option [value]="TypeReparation.REPARATION_CARROSSERIE">Réparation Carrosserie</option>
+            <option [value]="TypeReparation.CHANGEMENT_PNEUS">Changement Pneus</option>
+            <option [value]="TypeReparation.REPARATION_AUTRE">Autre</option>
+          </select>
+        </div>
+
+        <!-- Date début -->
+        <div class="form-group">
+          <label class="form-label">Date début</label>
+          <input 
+            type="date" 
+            class="form-control" 
+            [(ngModel)]="dateDebut"
+            (change)="applyFilters()">
+        </div>
+
+        <!-- Date fin -->
+        <div class="form-group">
+          <label class="form-label">Date fin</label>
+          <input 
+            type="date" 
+            class="form-control" 
+            [(ngModel)]="dateFin"
+            (change)="applyFilters()">
+        </div>
+      </div>
+
+      <button class="btn btn-outline-secondary" (click)="resetFilters()">
+        <i class="fas fa-times"></i>
+        Réinitialiser les filtres
+      </button>
+    </div>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div class="alert alert-danger" *ngIf="error">
+    <i class="fas fa-exclamation-triangle"></i>
+    {{ error }}
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-container" *ngIf="loading">
+    <div class="spinner-border" role="status"></div>
+    <p>Chargement des réparations...</p>
+  </div>
+
+  <!-- Tableau des réparations -->
+  <div class="table-section" *ngIf="!loading">
+    <div class="table-header">
+      <div class="table-title">
+        <i class="fas fa-list"></i>
+        <span>Liste des Réparations</span>
+      </div>
+      <span class="badge bg-primary">{{ filteredReparations.length }} réparation(s)</span>
+    </div>
+    
+    <div class="table-responsive" *ngIf="filteredReparations.length > 0">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Véhicule</th>
+            <th>Garage</th>
+            <th>Coût Total</th>
+            <th>Statut</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let reparation of paginatedReparations" class="fade-in">
+            <td>
+              <div class="fw-medium">{{ formatDate(reparation.dateDebutReparation) }}</div>
+              <small class="text-muted" *ngIf="reparation.dateDebutReparation">
+                Début: {{ formatDate(reparation.dateDebutReparation) }}
+              </small>
+            </td>
+            <td>
+              <span class="badge bg-info">
+                {{ getTypeReparationLabel(reparation.typeReparation) }}
+              </span>
+            </td>
+            <td>
+              <div class="fw-medium">{{ reparation.description }}</div>
+              <small class="text-muted" *ngIf="reparation.numeroFacture">
+                Facture: {{ reparation.numeroFacture }}
+              </small>
+            </td>
+            <td>
+              <div class="fw-medium" *ngIf="reparation.vehicule">
+                {{ reparation.vehicule.immatriculation }}
+              </div>
+              <small class="text-muted" *ngIf="reparation.vehicule">
+                {{ reparation.vehicule.marque }} {{ reparation.vehicule.modele }}
+              </small>
+            </td>
+            <td>
+              <span *ngIf="reparation.nomGarage">{{ reparation.nomGarage }}</span>
+              <span *ngIf="!reparation.nomGarage" class="text-muted">-</span>
+            </td>
+            <td>
+              <div class="fw-medium text-success">
+                {{ formatCurrency(reparation.coutTotal) }}
+              </div>
+              <small class="text-muted" *ngIf="reparation.coutPieces || reparation.coutMainOeuvre">
+                <div *ngIf="reparation.coutPieces">Pièces: {{ formatCurrency(reparation.coutPieces) }}</div>
+                <div *ngIf="reparation.coutMainOeuvre">M.O.: {{ formatCurrency(reparation.coutMainOeuvre) }}</div>
+              </small>
+            </td>
+            <td>
+              <span class="badge" [ngClass]="getStatutBadgeClass(reparation.statut!)">
+                {{ getStatutReparationLabel(reparation.statut!) }}
+              </span>
+            </td>
+            <td class="text-center">
+              <div class="d-flex justify-content-center gap-1">
+                <!-- Bouton Modifier -->
+                <button 
+                  class="btn btn-outline-warning btn-sm"
+                  (click)="onEditReparation(reparation.id!)"
+                  title="Modifier la réparation">
+                  <i class="fas fa-edit"></i>
+                </button>
+
+                <!-- Bouton Terminer - visible seulement pour les réparations en cours -->
+                <button 
+                  *ngIf="reparation.statut === StatutReparation.EN_COURS"
+                  class="btn btn-outline-success btn-sm"
+                  (click)="onTerminerReparation(reparation.id!)"
+                  title="Terminer la réparation">
+                  <i class="fas fa-check"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Message si aucune réparation -->
+    <div class="empty-state" *ngIf="filteredReparations.length === 0">
+      <i class="fas fa-tools"></i>
+      <h5>Aucune réparation trouvée</h5>
+      <p>Aucune réparation ne correspond à vos critères de recherche.</p>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-section" *ngIf="totalPages > 1">
+      <nav aria-label="Pagination des réparations">
+        <ul class="pagination">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button class="page-link" (click)="goToPage(currentPage - 1)">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+          </li>
+          
+          <li 
+            class="page-item" 
+            *ngFor="let page of [].constructor(totalPages); let i = index"
+            [class.active]="currentPage === i + 1">
+            <button class="page-link" (click)="goToPage(i + 1)">
+              {{ i + 1 }}
+            </button>
+          </li>
+          
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <button class="page-link" (click)="goToPage(currentPage + 1)">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </li>
+        </ul>
+      </nav>
+      
+      <div class="pagination-info">
+        Page {{ currentPage }} sur {{ totalPages }} 
+        ({{ filteredReparations.length }} réparation(s) au total)
+      </div>
+    </div>
+  </div>
+</div>

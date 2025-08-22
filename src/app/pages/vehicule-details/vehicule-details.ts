@@ -9,7 +9,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { VehiculeService } from '../../services/vehicule.service';
-import { Vehicule, StatutVehicule, TypeCarburant } from '../../models/vehicule';
+import { MissionService } from '../../services/mission.service';
+import { ReparationService } from '../../services/reparation.service';
+import { Vehicule, StatutVehicule, TypeCarburant, StatutMission } from '../../models/vehicule';
+import { Mission } from '../../models/mission';
+import { ReparationDTO, StatutReparation } from '../../models/reparation';
 
 @Component({
   selector: 'app-vehicule-details',
@@ -29,13 +33,19 @@ import { Vehicule, StatutVehicule, TypeCarburant } from '../../models/vehicule';
 })
 export class VehiculeDetails implements OnInit {
   vehicule: Vehicule | null = null;
+  missions: Mission[] = [];
+  reparations: ReparationDTO[] = [];
   isLoading = true;
+  isLoadingMissions = true;
+  isLoadingReparations = true;
   vehiculeId: number | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private vehiculeService: VehiculeService
+    private vehiculeService: VehiculeService,
+    private missionService: MissionService,
+    private reparationService: ReparationService
   ) {}
 
   ngOnInit(): void {
@@ -44,6 +54,8 @@ export class VehiculeDetails implements OnInit {
       this.vehiculeId = +params['id']; // Le + convertit en number
       if (this.vehiculeId) {
         this.loadVehiculeDetails();
+        this.loadMissions();
+        this.loadReparations();
       }
     });
   }
@@ -60,8 +72,36 @@ export class VehiculeDetails implements OnInit {
         this.isLoading = false;
       }
     });
-    
-    
+  }
+
+  loadMissions(): void {
+    this.isLoadingMissions = true;
+    this.missionService.getMissionsByVehicule(this.vehiculeId!).subscribe({
+      next: (missions) => {
+        this.missions = missions;
+        this.isLoadingMissions = false;
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération des missions:', err);
+        this.missions = [];
+        this.isLoadingMissions = false;
+      }
+    });
+  }
+
+  loadReparations(): void {
+    this.isLoadingReparations = true;
+    this.reparationService.getReparationsByVehicule(this.vehiculeId!).subscribe({
+      next: (reparations) => {
+        this.reparations = reparations;
+        this.isLoadingReparations = false;
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération des réparations:', err);
+        this.reparations = [];
+        this.isLoadingReparations = false;
+      }
+    });
   }
 
   // Méthode temporaire pour simuler la récupération d'un véhicule
@@ -184,6 +224,38 @@ export class VehiculeDetails implements OnInit {
   modifierVehicule(): void {
     if (this.vehicule?.id) {
       this.router.navigate(['/admin/modifier-vehicule', this.vehicule.id]);
+    }
+  }
+
+  // Méthodes utilitaires pour les missions
+  getMissionStatutColor(statut: StatutMission): string {
+    switch (statut) {
+      case StatutMission.PLANIFIEE: return '#FF9800';
+      case StatutMission.EN_COURS: return '#2196F3';
+      case StatutMission.TERMINEE: return '#4CAF50';
+      case StatutMission.ANNULEE: return '#F44336';
+      default: return '#9E9E9E';
+    }
+  }
+
+  formatDate(dateString: string): string {
+    if (!dateString) return '';
+    return new Date(dateString).toLocaleDateString('fr-FR');
+  }
+
+  formatCurrency(amount: number): string {
+    if (!amount) return '0,00 €';
+    return new Intl.NumberFormat('fr-FR', {
+      style: 'currency',
+      currency: 'EUR'
+    }).format(amount);
+  }
+
+  getReparationStatutColor(statut: StatutReparation): string {
+    switch (statut) {
+      case StatutReparation.EN_COURS: return '#FF9800';
+      case StatutReparation.TERMINEE: return '#4CAF50';
+      default: return '#9E9E9E';
     }
   }
 }

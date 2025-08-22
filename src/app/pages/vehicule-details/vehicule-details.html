@@ -149,10 +149,7 @@
           Modifier
         </button>
         
-        <button mat-raised-button color="accent" *ngIf="vehicule.statut === 'DISPONIBLE'">
-          <mat-icon>assignment_ind</mat-icon>
-          Assigner
-        </button>
+        
         
         <button mat-raised-button color="warn" *ngIf="vehicule.statut === 'EN_MISSION'">
           <mat-icon>logout</mat-icon>
@@ -168,6 +165,7 @@
 
     <!-- Cartes supplémentaires pour missions, réparations, etc. -->
     <div class="additional-cards">
+      <!-- Historique des missions -->
       <mat-card class="history-card">
         <mat-card-header>
           <mat-card-title>
@@ -176,19 +174,119 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <p class="no-data">Aucune mission enregistrée pour l'instant.</p>
+          <!-- Chargement -->
+          <div *ngIf="isLoadingMissions" class="loading-small">
+            <mat-spinner diameter="30"></mat-spinner>
+            <span>Chargement des missions...</span>
+          </div>
+
+          <!-- Liste des missions -->
+          <div *ngIf="!isLoadingMissions && missions.length > 0" class="missions-list">
+            <div *ngFor="let mission of missions" class="mission-item">
+              <div class="mission-header">
+                <mat-chip 
+                  [style.background-color]="getMissionStatutColor(mission.statut!)"
+                  [style.color]="'white'"
+                  class="small-chip">
+                  {{ mission.statut }}
+                </mat-chip>
+                <span class="mission-dates">
+                  {{ formatDate(mission.dateDebut.toString()) }} 
+                  <span *ngIf="mission.dateFin"> - {{ formatDate(mission.dateFin.toString()) }}</span>
+                </span>
+              </div>
+              <div class="mission-details">
+                <div class="mission-field">
+                  <mat-icon>place</mat-icon>
+                  <span><strong>Destination:</strong> {{ mission.lieuDestination }}</span>
+                </div>
+                <div class="mission-field">
+                  <mat-icon>my_location</mat-icon>
+                  <span><strong>Départ:</strong> {{ mission.lieuDepart }}</span>
+                </div>
+                <div class="mission-field">
+                  <mat-icon>assignment</mat-icon>
+                  <span><strong>Objet:</strong> {{ mission.objet }}</span>
+                </div>
+                <div class="mission-field" *ngIf="mission.description">
+                  <mat-icon>description</mat-icon>
+                  <span><strong>Description:</strong> {{ mission.description }}</span>
+                </div>
+                <div class="mission-field" *ngIf="mission.kilometrageDepart">
+                  <mat-icon>straighten</mat-icon>
+                  <span><strong>Kilométrage départ:</strong> {{ mission.kilometrageDepart | number }} km</span>
+                </div>
+                <div class="mission-field" *ngIf="mission.conducteur">
+                  <mat-icon>person</mat-icon>
+                  <span><strong>Conducteur:</strong> {{ mission.conducteur.prenom }} {{ mission.conducteur.nom }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Aucune mission -->
+          <div *ngIf="!isLoadingMissions && missions.length === 0" class="no-data">
+            <mat-icon>info</mat-icon>
+            <p>Aucune mission enregistrée pour ce véhicule.</p>
+          </div>
         </mat-card-content>
       </mat-card>
 
+      <!-- Historique des réparations -->
       <mat-card class="maintenance-card">
         <mat-card-header>
           <mat-card-title>
             <mat-icon>build</mat-icon>
-            Historique de maintenance
+            Historique des réparations
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <p class="no-data">Aucune maintenance enregistrée pour l'instant.</p>
+          <!-- Chargement -->
+          <div *ngIf="isLoadingReparations" class="loading-small">
+            <mat-spinner diameter="30"></mat-spinner>
+            <span>Chargement des réparations...</span>
+          </div>
+
+          <!-- Liste des réparations -->
+          <div *ngIf="!isLoadingReparations && reparations.length > 0" class="reparations-list">
+            <div *ngFor="let reparation of reparations" class="reparation-item">
+              <div class="reparation-header">
+                <mat-chip 
+                  [style.background-color]="getReparationStatutColor(reparation.statut!)"
+                  [style.color]="'white'"
+                  class="small-chip">
+                  {{ reparation.statut }}
+                </mat-chip>
+                <span class="reparation-date">
+                  {{ formatDate(reparation.dateDebutReparation) }}
+                </span>
+              </div>
+              <div class="reparation-details">
+                <div class="reparation-field">
+                  <mat-icon>build</mat-icon>
+                  <span><strong>Type:</strong> {{ reparation.typeReparation }}</span>
+                </div>
+                <div class="reparation-field">
+                  <mat-icon>description</mat-icon>
+                  <span><strong>Description:</strong> {{ reparation.description }}</span>
+                </div>
+                <div class="reparation-field" *ngIf="reparation.coutTotal">
+                  <mat-icon>euro</mat-icon>
+                  <span><strong>Coût total:</strong> {{ formatCurrency(reparation.coutTotal) }}</span>
+                </div>
+                <div class="reparation-field" *ngIf="reparation.nomGarage">
+                  <mat-icon>store</mat-icon>
+                  <span><strong>Garage:</strong> {{ reparation.nomGarage }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Aucune réparation -->
+          <div *ngIf="!isLoadingReparations && reparations.length === 0" class="no-data">
+            <mat-icon>info</mat-icon>
+            <p>Aucune réparation enregistrée pour ce véhicule.</p>
+          </div>
         </mat-card-content>
       </mat-card>
     </div>

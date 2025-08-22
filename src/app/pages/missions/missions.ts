@@ -41,13 +41,13 @@ export class Missions implements OnInit {
 
   loadMissions(): void {
     const userId = this.authService.getCurrentUserId();
-    
+    const isAdmin = this.authService.isAdmin();
     if (!userId) {
       this.error = "Impossible de récupérer l'ID de l'utilisateur";
       this.loading = false;
       return;
     }
-
+    if(!isAdmin) {
     this.missionService.getMissionsByConducteur(userId).subscribe({
       next: (missions) => {
         this.missions = missions;
@@ -59,7 +59,20 @@ export class Missions implements OnInit {
         this.error = "Erreur lors du chargement des missions";
         this.loading = false;
       }
-    });
+    });} else {
+      this.missionService.getAllMissions().subscribe({
+        next: (missions) => {
+          this.missions = missions;
+          this.filteredMissions = missions; // Initialiser les missions filtrées
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Erreur lors du chargement des missions:', err);
+          this.error = "Erreur lors du chargement des missions";
+          this.loading = false;
+        }
+      });
+    }
   }
 
   getStatutColor(statut: string): string {

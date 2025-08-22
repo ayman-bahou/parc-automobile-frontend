@@ -1,0 +1,197 @@
+<div class="signalements-container">
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Chargement des signalements...</p>
+  </div>
+
+  <div class="container-fluid" *ngIf="!loading">
+    <!-- Header Section -->
+    <div class="signalements-header">
+      <div class="header-content">
+        <div class="header-text">
+          <h1 class="page-title">
+            <mat-icon class="title-icon">report_problem</mat-icon>
+            {{ vehiculeId ? 'Signalements du véhicule' : (isAdmin() ? 'Tous les signalements' : 'Mes signalements') }}
+          </h1>
+          <p class="page-subtitle">
+            {{ vehiculeId ? 'Signalements relatifs à ce véhicule' : 
+               (isAdmin() ? 'Gérez tous les signalements du parc automobile' : 'Suivez l\'état de vos signalements') }}
+          </p>
+        </div>
+        <div class="header-stats" *ngIf="!loading && !error">
+          <div class="stat-card">
+            <span class="stat-number">{{ signalements.length }}</span>
+            <span class="stat-label">Total</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">{{ getSignalementsCount('EN_COURS') }}</span>
+            <span class="stat-label">En cours</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">{{ getSignalementsCount('RESOLU') }}</span>
+            <span class="stat-label">Résolus</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Section -->
+    <div class="signalements-content">
+      <!-- Filtres par statut -->
+      <div *ngIf="!loading && !error && signalements.length > 0" class="filters-section">
+        <div class="filters-header">
+          <h3>Filtrer par statut</h3>
+        </div>
+        <div class="filter-buttons">
+          <button 
+            mat-stroked-button 
+            [class.active]="selectedFilter === 'ALL'"
+            (click)="filterSignalements('ALL')"
+            class="filter-btn">
+            <mat-icon>list</mat-icon>
+            Tous ({{ signalements.length }})
+          </button>
+          
+          <button 
+            mat-stroked-button 
+            [class.active]="selectedFilter === 'EN_COURS'"
+            (click)="filterSignalements('EN_COURS')"
+            class="filter-btn en-cours">
+            <mat-icon>hourglass_empty</mat-icon>
+            En cours ({{ getSignalementsCount('EN_COURS') }})
+          </button>
+          <button 
+            mat-stroked-button 
+            [class.active]="selectedFilter === 'RESOLU'"
+            (click)="filterSignalements('RESOLU')"
+            class="filter-btn resolu">
+            <mat-icon>check_circle</mat-icon>
+            Résolus ({{ getSignalementsCount('RESOLU') }})
+          </button>
+          
+        </div>
+      </div>
+
+      <!-- Actions Section -->
+      <div *ngIf="!loading && !error && !vehiculeId && !isAdmin()" class="actions-section">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="creerNouveauSignalement()"
+          class="action-btn">
+          <mat-icon>add</mat-icon>
+          Nouveau signalement
+        </button>
+      </div>
+
+      <!-- Error state -->
+      <div *ngIf="error" class="error-container">
+        <mat-icon class="error-icon">error</mat-icon>
+        <h3>Erreur de chargement</h3>
+        <p>{{ error }}</p>
+        <button mat-raised-button color="primary" (click)="loadSignalements()">
+          <mat-icon>refresh</mat-icon>
+          Réessayer
+        </button>
+      </div>
+
+      <!-- Empty state -->
+      <div *ngIf="!loading && !error && filteredSignalements.length === 0" class="empty-state">
+        <mat-icon class="empty-icon">inbox</mat-icon>
+        <h3>Aucun signalement trouvé</h3>
+        <p *ngIf="selectedFilter === 'ALL'">
+          {{ vehiculeId ? 'Ce véhicule n\'a pas encore de signalements.' : 
+             (isAdmin() ? 'Aucun signalement n\'a été créé.' : 'Vous n\'avez pas encore créé de signalements.') }}
+        </p>
+        <p *ngIf="selectedFilter !== 'ALL'">Aucun signalement ne correspond au filtre sélectionné.</p>
+        <button 
+          *ngIf="!vehiculeId && !isAdmin()"
+          mat-raised-button 
+          color="primary" 
+          (click)="creerNouveauSignalement()">
+          <mat-icon>add</mat-icon>
+          Créer un signalement
+        </button>
+      </div>
+
+      <!-- Signalements Grid -->
+      <div *ngIf="!loading && !error && filteredSignalements.length > 0" class="signalements-grid">
+        <mat-card *ngFor="let signalement of filteredSignalements" class="signalement-card">
+          <mat-card-header>
+            
+            <mat-card-title>{{ signalement.titre }}</mat-card-title>
+            <mat-card-subtitle>
+              <div class="card-subtitle-content">
+                <span class="vehicule-info">
+                  <mat-icon>directions_car</mat-icon>
+                  {{ signalement.vehicule.immatriculation }} - {{ signalement.vehicule.marque }} {{ signalement.vehicule.modele }}
+                </span>
+                <span class="date-info">
+                  <mat-icon>schedule</mat-icon>
+                  {{ signalement.dateCreation | date:'dd/MM/yyyy à HH:mm' }}
+                </span>
+              </div>
+            </mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="signalement-details">
+              <div class="detail-row">
+                <strong>Titre:</strong>
+                <span>{{ signalement.titre }}</span>
+              </div>
+              
+              <div class="detail-row">
+                <strong>Date de création:</strong>
+                <span>{{ signalement.dateCreation | date:'dd/MM/yyyy à HH:mm' }}</span>
+              </div>
+              
+              <div class="detail-row">
+                <strong>Statut:</strong>
+                <mat-chip 
+                  [ngClass]="'statut-' + signalement.statut.toLowerCase().replace('_', '-')"
+                  selected>
+                  <mat-icon matChipAvatar>{{ getStatutIcon(signalement.statut) }}</mat-icon>
+                  {{ signalement.statut }}
+                </mat-chip>
+              </div>
+
+              <div *ngIf="isAdmin()" class="detail-row">
+                <strong>Utilisateur:</strong>
+                <span class="user-info">
+                  <mat-icon>person</mat-icon>
+                  {{ signalement.utilisateur.nom }} {{ signalement.utilisateur.prenom }}
+                </span>
+              </div>
+
+              <div class="description-section">
+                <strong>Description:</strong>
+                <p class="description-text">{{ signalement.description }}</p>
+              </div>
+
+              
+
+              <div *ngIf="signalement.dateResolution" class="resolution-date">
+                <strong>Date de résolution:</strong>
+                <span>{{ signalement.dateResolution | date:'dd/MM/yyyy à HH:mm' }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions *ngIf="isAdmin() && signalement.statut === StatutSignalement.EN_COURS">
+            <button 
+              mat-button 
+              color="primary" 
+              (click)="signalement.id && resoudreSignalement(signalement.id)"
+              matTooltip="Marquer comme résolu" *ngIf="isAdmin()">
+              <mat-icon>check_circle</mat-icon>
+              Résoudre
+            </button>
+            
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

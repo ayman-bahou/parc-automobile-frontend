@@ -322,3 +322,95 @@
     justify-content: center;
   }
 }
+
+/* Styles pour l'historique des missions et réparations */
+.loading-small {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  justify-content: center;
+  color: #666;
+}
+
+.missions-list, .reparations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mission-item, .reparation-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: #fafafa;
+  transition: box-shadow 0.2s ease;
+}
+
+.mission-item:hover, .reparation-item:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.mission-header, .reparation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mission-dates, .reparation-date {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.small-chip {
+  font-size: 12px !important;
+  height: 24px !important;
+  border-radius: 12px !important;
+  padding: 0 8px !important;
+}
+
+.mission-details, .reparation-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mission-field, .reparation-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.mission-field mat-icon, .reparation-field mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #666;
+}
+
+.no-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: #999;
+}
+
+.no-data mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 12px;
+  color: #ccc;
+}
+
+.no-data p {
+  margin: 0;
+  font-size: 16px;
+}

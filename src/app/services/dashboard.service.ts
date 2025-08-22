@@ -46,7 +46,7 @@ export class DashboardService {
   getDashboardStats(id:number): Observable<DashboardStats> {
     const headers = this.getHttpHeaders();
 
-    return this.http.get<DashboardStats>(`${this.apiUrl}/reporting/tableau-de-bord/${id}`, { headers });
+    return this.http.get<DashboardStats>(`${this.apiUrl}/reporting/tableau-de-bord`, { headers });
   }  // Récupérer les véhicules par statut
   getVehiculesByStatut(statut: string): Observable<any[]> {
     const headers = this.getHttpHeaders();

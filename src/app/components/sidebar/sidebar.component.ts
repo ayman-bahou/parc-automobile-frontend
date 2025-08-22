@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { AuthService } from '../../services/auth-service/auth-service';
 
 declare interface RouteInfo {
     path: string;
@@ -17,6 +18,9 @@ export const ROUTES: RouteInfo[] = [
     { path: '/admin/account', title: 'User Profile',  icon:'person', class: '' },
     { path: '/admin/vehicules', title: 'Véhicules',  icon: 'directions_car', class: '' },
     { path: '/admin/missions', title: 'Missions',  icon: 'assignment', class: '' },
+    { path: '/admin/signalements', title: 'Signalements',  icon: 'report', class: '' },
+    { path: '/admin/reparations', title: 'Réparations',  icon: 'report', class: '' },
+    { path: '/admin/maintenances', title: 'Maintenances',  icon: 'report', class: '' },
     { path: '/table-list', title: 'Table List',  icon:'content_paste', class: '' },
     { path: '/typography', title: 'Typography',  icon:'library_books', class: '' },
     { path: '/icons', title: 'Icons',  icon:'bubble_chart', class: '' },
@@ -33,11 +37,24 @@ export const ROUTES: RouteInfo[] = [
 })
 export class SidebarComponent implements OnInit {
   menuItems: any[] = [];
+  authority: string | null = '';
 
-  constructor() { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit() {
-    this.menuItems = ROUTES.filter(menuItem => menuItem);
+    this.getAuthority();
+    //this.menuItems = ROUTES.filter(menuItem => menuItem);
+  }
+
+  getAuthority() {
+    this.authority=this.authService.getUserRole()? this.authService.getUserRole() : '';
+    if (this.authority === 'ADMIN') {
+      this.menuItems = ROUTES;
+    } else if (this.authority === 'USER') {
+      this.menuItems = ROUTES.filter(menuItem => menuItem.title !== 'Réparations' && menuItem.title !== 'Maintenances');
+    } else {
+      this.menuItems = [];
+    }
   }
 
   isMobileMenu() {
