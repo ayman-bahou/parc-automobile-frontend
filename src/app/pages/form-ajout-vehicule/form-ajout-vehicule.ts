@@ -107,8 +107,7 @@ export class FormAjoutVehicule implements OnInit {
       
       // Informations administratives
       dateMiseEnService: [''],
-      dateDerniereVisiteTechnique: [''],
-      dateProchainerVisiteTechnique: [''],
+      
       
       // État et statut
       statut: [StatutVehicule.DISPONIBLE, Validators.required],
@@ -148,8 +147,7 @@ export class FormAjoutVehicule implements OnInit {
       kilometrageActuel: vehicule.kilometrageActuel,
       typeCarburant: vehicule.typeCarburant,
       dateMiseEnService: vehicule.dateMiseEnService ? new Date(vehicule.dateMiseEnService) : null,
-      dateDerniereVisiteTechnique: vehicule.dateDerniereVisiteTechnique ? new Date(vehicule.dateDerniereVisiteTechnique) : null,
-      dateProchainerVisiteTechnique: vehicule.dateProchainerVisiteTechnique ? new Date(vehicule.dateProchainerVisiteTechnique) : null,
+      
       statut: vehicule.statut,
       consommationMoyenne: vehicule.consommationMoyenne,
       capaciteReservoir: vehicule.capaciteReservoir
@@ -165,7 +163,7 @@ export class FormAjoutVehicule implements OnInit {
       if (this.isEditMode && this.vehiculeId) {
         // Mode modification
         this.vehiculeService.updateVehicule(this.vehiculeId, vehiculeData as Vehicule).subscribe({
-          next: (response) => {
+          next: (_) => {
             this.isLoading = false;
             this.snackBar.open('Véhicule modifié avec succès !', 'Fermer', {
               duration: 3000,

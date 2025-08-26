@@ -84,7 +84,7 @@ export class FormReparationComponent implements OnInit {
   }
 
   private loadVehicules(): void {
-    this.vehiculeService.getAllVehicules().subscribe({
+    this.vehiculeService.getVehiculesForReparation().subscribe({
       next: (vehicules) => {
         this.vehicules = vehicules;
       },

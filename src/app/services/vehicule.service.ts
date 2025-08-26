@@ -36,6 +36,11 @@ export class VehiculeService {
     return this.http.get<Vehicule[]>(`${this.baseUrl}/statut/${statut}`, { headers: this.getHttpHeaders() });
   }
 
+  getVehiculesForReparation(): Observable<Vehicule[]> {
+    return this.http.get<Vehicule[]>(`${this.baseUrl}/reparation`, { headers: this.getHttpHeaders() });
+  }
+
+
   // Récupérer les statistiques des véhicules
   getVehiculeStats(): Observable<VehiculeStats> {
     return this.http.get<VehiculeStats>(`${this.baseUrl}/stats`, { headers: this.getHttpHeaders() });

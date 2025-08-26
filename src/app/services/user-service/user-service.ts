@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Utilisateur } from '../../models/utilisateur';
+import { Notification } from '../../models/Notification';
 import { AuthService } from '../auth-service/auth-service';
 
 @Injectable({
@@ -114,6 +115,23 @@ export class UserService {
     });
 
     return this.http.delete(`${this.apiUrl}/delete/user/${userId}`, {
+      headers,
+    });
+  }
+
+  getAllNotifications(userId: number): Observable<Notification[]> {
+    const token = this.authService.getToken();
+
+    // Vérifier que le token existe
+    if (!token) {
+      throw new Error("Token d'authentification manquant");
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.get<Notification[]>(`${this.apiUrl}/notifications/${userId}`, {
       headers,
     });
   }

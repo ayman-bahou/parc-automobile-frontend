@@ -6,4 +6,5 @@ export interface Utilisateur {
     motDePasse: string;
     numeroTelephone : string;
     role: { libelle : string; };
+    notifications?: Notification[];
 }

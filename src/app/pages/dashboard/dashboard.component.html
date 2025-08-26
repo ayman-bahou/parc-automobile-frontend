@@ -1,12 +1,12 @@
 <div class="content">
     <!-- Loading state pour les statistiques principales -->
     
-    <div *ngIf="!areMainStatsLoaded" class="loading-container">
+    <div *ngIf="isLoading" class="loading-container">
     <mat-spinner></mat-spinner>
     <p>Chargement des statistiques...</p>
   </div>
 
-    <div class="container-fluid" *ngIf="areMainStatsLoaded">
+    <div class="container-fluid" *ngIf="!isLoading">
         <!-- En-tête du Dashboard -->
         <div class="row mb-4">
             <div class="col-12">
@@ -16,7 +16,7 @@
         </div>
 
         <!-- Statistiques principales du parc automobile -->
-        <div class="row stats-row" *ngIf="areMainStatsLoaded">
+        <div class="row stats-row" *ngIf="!isLoading">
             <div class="col-lg-3 col-md-6 col-sm-6" *ngFor="let stat of getStatsArray(); let i = index" 
                  [style.animation-delay]="(i * 0.1) + 's'">
                 <mat-card class="card-stats">
@@ -43,7 +43,7 @@
         
         
         <!-- Alertes et Indicateurs -->
-        <div class="row" *ngIf="areMainStatsLoaded">
+        <div class="row" *ngIf="!isLoading">
             <div class="col-md-12">
                 <mat-card>
                     <mat-card-header>
@@ -61,15 +61,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <div class="alert-item">
-                                    <mat-icon class="alert-icon text-warning">build</mat-icon>
-                                    <div class="alert-content">
-                                        <h4>{{ alertes.maintenancesEnRetard }}</h4>
-                                        <span>Maintenances en retard</span>
-                                    </div>
-                                </div>
-                            </div>
+                            
                             <div class="col-md-3">
                                 <div class="alert-item">
                                     <mat-icon class="alert-icon text-info">local_gas_station</mat-icon>
@@ -95,7 +87,7 @@
         </div>
         
         <!-- Coûts et Budget -->
-        <div class="row" *ngIf="areMainStatsLoaded">
+        <div class="row" *ngIf="!isLoading">
             <div class="col-md-6">
                 <mat-card>
                     <mat-card-header>
@@ -117,13 +109,7 @@
                             </div>
                             <div class="cost-value">{{ coutsStats.reparations | currency:'EUR':'symbol':'1.0-0' }}</div>
                         </div>
-                        <div class="cost-item">
-                            <div class="cost-label">
-                                <mat-icon>settings</mat-icon>
-                                Maintenance
-                            </div>
-                            <div class="cost-value">{{ coutsStats.maintenance | currency:'EUR':'symbol':'1.0-0' }}</div>
-                        </div>
+                        
                         <hr>
                         <div class="cost-item total">
                             <div class="cost-label">
@@ -139,7 +125,7 @@
             <div class="col-md-6">
                 <mat-card>
                     <mat-card-header>
-                        <mat-card-title>Missions Récentes</mat-card-title>
+                        <mat-card-title>Missions En Cours</mat-card-title>
                         <mat-card-subtitle>Dernières activités de la flotte</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content>
@@ -150,7 +136,7 @@
                                     <span class="mission-destination">{{ mission.destination || mission.lieuDepart + ' → ' + mission.lieuDestination }}</span>
                                     <small class="text-muted">{{ mission.vehicule?.immatriculation || mission.vehicule }}</small>
                                 </div>
-                                <mat-chip [color]="getStatutColor(mission.statut)" selected>
+                                <mat-chip [class]="getStatutColor(mission.statut)" selected>
                                     {{ mission.statut }}
                                 </mat-chip>
                             </div>
@@ -168,27 +154,7 @@
         </div>
         
         <!-- Véhicules nécessitant une attention -->
-        <div class="row" *ngIf="isAllDataLoaded && vehiculesAttention.length > 0">
-            <div class="col-md-12">
-                <mat-card>
-                    <mat-card-header>
-                        <mat-card-title>Véhicules Nécessitant une Attention</mat-card-title>
-                        <mat-card-subtitle>Actions requises pour maintenir la flotte opérationnelle</mat-card-subtitle>
-                    </mat-card-header>
-                    <mat-card-content>
-                        <div class="attention-item" *ngFor="let vehicule of vehiculesAttention">
-                            <div class="attention-info">
-                                <strong>{{ vehicule.immatriculation }}</strong>
-                                <span class="attention-problem">{{ vehicule.probleme }}</span>
-                            </div>
-                            <mat-chip [color]="getPrioriteColor(vehicule.priorite)" selected>
-                                {{ vehicule.priorite | titlecase }}
-                            </mat-chip>
-                        </div>
-                    </mat-card-content>
-                </mat-card>
-            </div>
-        </div>
+        
         
         
     </div>

@@ -499,6 +499,47 @@ mat-chip:hover {
     box-shadow: 0 6px 12px rgba(0,0,0,0.15) !important;
 }
 
+/* Styles spécifiques pour les statuts de mission */
+.statut-en-cours {
+    background: linear-gradient(135deg, #09d84e 0%, #07ca3b 100%) !important;
+    color: white !important;
+    border: none !important;
+}
+
+.statut-terminee {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%) !important;
+    color: white !important;
+    border: none !important;
+}
+
+.statut-planifiee {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%) !important;
+    color: white !important;
+    border: none !important;
+}
+
+.statut-annulee {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ffa8a8 100%) !important;
+    color: white !important;
+    border: none !important;
+}
+
+.statut-default {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    border: none !important;
+}
+
+/* Animation pour les chips de statut */
+.statut-en-cours:hover,
+.statut-terminee:hover,
+.statut-planifiee:hover,
+.statut-annulee:hover,
+.statut-default:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2) !important;
+}
+
 /* Animation d'apparition pour les éléments */
 .cost-item, .mission-item, .attention-item, .alert-item {
     animation: slideInUp 0.5s ease-out;

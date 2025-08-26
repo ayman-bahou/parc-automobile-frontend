@@ -18,14 +18,9 @@ export const ROUTES: RouteInfo[] = [
     { path: '/admin/account', title: 'User Profile',  icon:'person', class: '' },
     { path: '/admin/vehicules', title: 'Véhicules',  icon: 'directions_car', class: '' },
     { path: '/admin/missions', title: 'Missions',  icon: 'assignment', class: '' },
-    { path: '/admin/signalements', title: 'Signalements',  icon: 'report', class: '' },
-    { path: '/admin/reparations', title: 'Réparations',  icon: 'report', class: '' },
-    { path: '/admin/maintenances', title: 'Maintenances',  icon: 'report', class: '' },
-    { path: '/table-list', title: 'Table List',  icon:'content_paste', class: '' },
-    { path: '/typography', title: 'Typography',  icon:'library_books', class: '' },
-    { path: '/icons', title: 'Icons',  icon:'bubble_chart', class: '' },
-    { path: '/maps', title: 'Maps',  icon:'location_on', class: '' },
-    { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '' },
+    { path: '/admin/signalements', title: 'Signalements',  icon: 'warning', class: '' },
+    { path: '/admin/reparations', title: 'Réparations',  icon: 'build', class: '' },
+    { path: '/admin/notifications', title: 'Notifications',  icon:'notifications', class: '' },
 ];
 
 @Component({
@@ -51,7 +46,7 @@ export class SidebarComponent implements OnInit {
     if (this.authority === 'ADMIN') {
       this.menuItems = ROUTES;
     } else if (this.authority === 'USER') {
-      this.menuItems = ROUTES.filter(menuItem => menuItem.title !== 'Réparations' && menuItem.title !== 'Maintenances');
+      this.menuItems = ROUTES.filter(menuItem => menuItem.title !== 'Réparations');
     } else {
       this.menuItems = [];
     }

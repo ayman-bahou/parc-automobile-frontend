@@ -37,8 +37,13 @@
 
 .title-icon {
   font-size: 2rem;
+  height: 2rem;
+  width: 2rem;
   margin-right: 12px;
   color: #dc3545;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .page-subtitle {

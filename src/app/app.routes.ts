@@ -81,6 +81,10 @@ export const routes: Routes = [
       {
         path: 'reparations/:idSignalement',
         loadComponent: () => import('./pages/form-reparation/form-reparation.component').then(m => m.FormReparationComponent)
+      },
+      {
+        path: 'notifications',
+        loadComponent: () => import('./pages/notifications/notifications').then(m => m.NotificationsComponent)
       }
 
 

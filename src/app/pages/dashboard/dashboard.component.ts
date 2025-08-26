@@ -7,8 +7,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { DashboardService, DashboardStats } from '../../services/dashboard.service';
-import { Mission } from '../../models/mission';
-import { Vehicule } from '../../models/vehicule';
+
 import { AuthService } from '../../services/auth-service/auth-service';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -154,38 +153,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     });
 
-    // Charger les véhicules nécessitant une attention
-    this.dashboardService.getVehiculesVisiteTechnique(30).subscribe({
-      next: (vehicules) => {
-        this.vehiculesAttention = vehicules.map(v => ({
-          immatriculation: v.immatriculation,
-          probleme: `Visite technique échue le ${new Date(v.dateProchainerVisiteTechnique).toLocaleDateString()}`,
-          priorite: 'haute'
-        }));
-        this.isLoadingVehicules = false;
-      },
-      error: (error) => {
-        console.error('Erreur lors du chargement des véhicules attention:', error);
-        this.isLoadingVehicules = false;
-      }
-    });
+    
 
     // Charger les maintenances en retard
-    this.dashboardService.getMaintenancesEnRetard().subscribe({
-      next: (maintenances) => {
-        const maintenancesAttention = maintenances.map(m => ({
-          immatriculation: m.vehicule?.immatriculation || 'N/A',
-          probleme: `Maintenance ${m.typeMaintenance} en retard`,
-          priorite: 'moyenne'
-        }));
-        this.vehiculesAttention = [...this.vehiculesAttention, ...maintenancesAttention];
-        this.isLoadingMaintenances = false;
-      },
-      error: (error) => {
-        console.error('Erreur lors du chargement des maintenances:', error);
-        this.isLoadingMaintenances = false;
-      }
-    });
+    //this.dashboardService.getMaintenancesEnRetard().subscribe({
+    //  next: (maintenances) => {
+    //    const maintenancesAttention = maintenances.map(m => ({
+    //      immatriculation: m.vehicule?.immatriculation || 'N/A',
+    //      probleme: `Maintenance ${m.typeMaintenance} en retard`,
+    //      priorite: 'moyenne'
+    //    }));
+    //    this.vehiculesAttention = [...this.vehiculesAttention, ...maintenancesAttention];
+    //    this.isLoadingMaintenances = false;
+    //  },
+    //  error: (error) => {
+    //    console.error('Erreur lors du chargement des maintenances:', error);
+    //    this.isLoadingMaintenances = false;
+    //  }
+    //});
   }
 
   //setDefaultData(): void {
@@ -215,10 +200,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   getStatutColor(statut: string): string {
     switch (statut) {
-      case 'EN_COURS': return 'accent';
-      case 'TERMINEE': return 'primary';
-      case 'PLANIFIEE': return 'warn';
-      default: return '';
+      case 'EN_COURS': return 'statut-en-cours';
+      case 'TERMINEE': return 'statut-terminee';
+      case 'PLANIFIEE': return 'statut-planifiee';
+      case 'ANNULEE': return 'statut-annulee';
+      default: return 'statut-default';
     }
   }
 
@@ -241,20 +227,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return value ?? 0;
   }
 
-  // Vérifier si tous les chargements sont terminés
-  get isAllDataLoaded(): boolean {
-    return !this.isLoading && !this.isLoadingMissions && !this.isLoadingVehicules && !this.isLoadingMaintenances;
-  }
 
-  // Vérifier si au moins les données principales sont chargées
-  get areMainStatsLoaded(): boolean {
-    return !this.isLoading;
-  }
-
-  // Méthode pour calculer le total des véhicules en maintenance/réparation
+  // Méthode pour calculer le total des véhicules en réparation
   getTotalMaintenanceReparation(): number {
-    return this.safeNumber(this.parkingStats.vehiculesEnReparation) + 
-           this.safeNumber(this.parkingStats.vehiculesEnMaintenance);
+    return this.safeNumber(this.parkingStats.vehiculesEnReparation);
   }
 
   // Méthode pour obtenir le tableau des statistiques avec leurs styles
@@ -288,7 +264,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         footerText: 'Véhicules actifs'
       },
       {
-        title: 'Maintenance/Réparation',
+        title: 'Réparation',
         subtitle: 'Véhicules indisponibles',
         value: this.getTotalMaintenanceReparation(),
         icon: 'build',

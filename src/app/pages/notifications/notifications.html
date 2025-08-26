@@ -1,0 +1,85 @@
+<div class="notifications-container">
+  <div class="notifications-header">
+    <h1 class="notifications-title">
+      <span class="material-icons">notifications</span>
+      Mes Notifications
+    </h1>
+    <div class="header-actions">
+      <button 
+        class="refresh-btn" 
+        (click)="refreshNotifications()" 
+        [disabled]="isLoading"
+        title="Actualiser les notifications">
+        <span class="material-icons">refresh</span>
+      </button>
+      <button 
+        class="delete-all-btn" 
+        (click)="supprimerToutesNotifications()" 
+        [disabled]="isLoading || notifications.length === 0"
+        title="Supprimer toutes les notifications">
+        <span class="material-icons">delete_sweep</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- État de chargement -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Chargement des notifications...</p>
+  </div>
+
+  <!-- État d'erreur -->
+  <div *ngIf="error && !isLoading" class="error-state">
+    <span class="material-icons">error</span>
+    <p>{{ error }}</p>
+    <button class="retry-btn" (click)="refreshNotifications()">
+      Réessayer
+    </button>
+  </div>
+
+  <!-- Liste des notifications -->
+  <div *ngIf="!isLoading && !error" class="notifications-content">
+    
+    <!-- Message si aucune notification -->
+    <div *ngIf="notifications.length === 0" class="empty-state">
+      <span class="material-icons">notifications_none</span>
+      <h3>Aucune notification</h3>
+      <p>Vous n'avez aucune notification pour le moment.</p>
+    </div>
+
+    <!-- Liste des notifications -->
+    <div *ngIf="notifications.length > 0" class="notifications-list">
+      <div class="notifications-header-info">
+        <p class="notifications-count">
+          {{ notifications.length }} notification{{ notifications.length > 1 ? 's' : '' }}
+        </p>
+      </div>
+
+      <div class="notification-item" *ngFor="let notification of notifications; trackBy: trackByNotificationId">
+        <div class="notification-icon">
+          <span class="material-icons" [ngClass]="getNotificationColor(notification.message)">
+            {{ getNotificationIcon(notification.message) }}
+          </span>
+        </div>
+        
+        <div class="notification-content">
+          <div class="notification-message">
+            {{ notification.message }}
+          </div>
+          <div class="notification-date">
+            <span class="material-icons">schedule</span>
+            {{ formatDate(notification.dateCreated) }}
+          </div>
+        </div>
+        
+        <div class="notification-actions">
+          <button class="delete-btn" 
+                  (click)="supprimerNotification(notification)" 
+                  title="Supprimer cette notification">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
