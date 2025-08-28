@@ -37,7 +37,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="admin/notifications">
                         <i class="material-icons">notifications</i>
-                        <span class="notification">5</span>
+                        <span class="notification" *ngIf="(notificationCount$ | async)! > 0">{{ notificationCount$ | async }}</span>
                         <p class="d-lg-none d-md-block">Notifications</p>
                     </a>
                 </li>

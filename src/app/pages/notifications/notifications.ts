@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth-service/auth-service';
 import { UserService } from '../../services/user-service/user-service';
 import { NotificationService } from '../../services/notification.service';
+import { NotificationCountService } from '../../services/notification-count.service';
 import { Notification } from '../../models/Notification';
 
 @Component({
@@ -21,7 +22,8 @@ export class NotificationsComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private userService: UserService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private notificationCountService: NotificationCountService
   ) {}
 
   ngOnInit(): void {
@@ -49,6 +51,8 @@ export class NotificationsComponent implements OnInit {
           new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()
         );
         this.isLoading = false;
+        // Mettre à jour le compteur dans le navbar
+        this.notificationCountService.updateNotificationCount(notifications.length);
       },
       error: (error) => {
         console.error('Erreur lors du chargement des notifications:', error);
@@ -71,11 +75,13 @@ export class NotificationsComponent implements OnInit {
   // Méthode pour supprimer une notification
   supprimerNotification(notification: Notification): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette notification ?')) {
-      this.notificationService.supprimerNotification(notification.id).subscribe({
+      this.notificationService.supprimerNotification(this.currentUserId!, notification.id).subscribe({
         next: (response: string) => {
           console.log('Notification supprimée:', response);
           // Supprimer la notification de la liste locale
           this.notifications = this.notifications.filter(n => n.id !== notification.id);
+          // Décrémenter le compteur dans le navbar
+          this.notificationCountService.decrementNotificationCount();
         },
         error: (error) => {
           console.error('Erreur lors de la suppression:', error);
@@ -98,6 +104,8 @@ export class NotificationsComponent implements OnInit {
           console.log('Toutes les notifications supprimées:', response);
           // Vider la liste locale
           this.notifications = [];
+          // Remettre à zéro le compteur dans le navbar
+          this.notificationCountService.resetNotificationCount();
         },
         error: (error) => {
           console.error('Erreur lors de la suppression:', error);

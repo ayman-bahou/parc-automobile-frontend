@@ -10,7 +10,6 @@ import { Subscription } from 'rxjs';
 
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
-import { FooterComponent } from '../../components/footer/footer.component';
 import { SidebarService } from '../../services/sidebar.service';
 
 @Component({
@@ -27,7 +26,7 @@ import { SidebarService } from '../../services/sidebar.service';
     MatListModule,
     SidebarComponent,
     NavbarComponent,
-    FooterComponent
+    
   ],
   templateUrl: './admin-layout.component.html',
   styleUrls: ['./admin-layout.component.css']

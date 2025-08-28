@@ -31,8 +31,8 @@ export class NotificationService {
   /**
    * Supprimer une notification par son ID
    */
-  supprimerNotification(id: number): Observable<string> {
-    return this.http.delete(`${this.apiUrl}/${id}`, {
+  supprimerNotification(idUser:number,idNotif: number): Observable<string> {
+    return this.http.delete(`${this.apiUrl}/${idNotif}/${idUser}`, {
       headers: this.getHeaders(),
       responseType: 'text'
     });
