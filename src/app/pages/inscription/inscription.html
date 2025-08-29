@@ -1,0 +1,147 @@
+<div class="inscription-container">
+  <div class="inscription-card">
+    <div class="inscription-header">
+      <h2>Inscription</h2>
+      <p>Créez votre compte</p>
+    </div>
+    
+    <form class="inscription-form" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nom">Nom</label>
+          <div class="input-wrapper">
+            <i class="material-icons">person</i>
+            <input 
+              type="text" 
+              id="nom" 
+              name="nom"
+              [(ngModel)]="nom"
+              placeholder="Entrez votre nom"
+              required
+              #nomInput="ngModel">
+          </div>
+          <div class="error-message" *ngIf="nomInput.invalid && nomInput.touched">
+            Nom requis
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="prenom">Prénom</label>
+          <div class="input-wrapper">
+            <i class="material-icons">person_outline</i>
+            <input 
+              type="text" 
+              id="prenom" 
+              name="prenom"
+              [(ngModel)]="prenom"
+              placeholder="Entrez votre prénom"
+              required
+              #prenomInput="ngModel">
+          </div>
+          <div class="error-message" *ngIf="prenomInput.invalid && prenomInput.touched">
+            Prénom requis
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <div class="input-wrapper">
+          <i class="material-icons">email</i>
+          <input 
+            type="email" 
+            id="email" 
+            name="email"
+            [(ngModel)]="email"
+            placeholder="Entrez votre email"
+            required
+            #emailInput="ngModel">
+        </div>
+        <div class="error-message" *ngIf="emailInput.invalid && emailInput.touched">
+          Email requis et valide
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="numeroTelephone">Numéro de téléphone</label>
+        <div class="input-wrapper">
+          <i class="material-icons">phone</i>
+          <input 
+            type="tel" 
+            id="numeroTelephone" 
+            name="numeroTelephone"
+            [(ngModel)]="numeroTelephone"
+            placeholder="Entrez votre numéro de téléphone"
+            required
+            #phoneInput="ngModel">
+        </div>
+        <div class="error-message" *ngIf="phoneInput.invalid && phoneInput.touched">
+          Numéro de téléphone requis
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="motDePasse">Mot de passe</label>
+          <div class="input-wrapper">
+            <i class="material-icons">lock</i>
+            <input 
+              [type]="showPassword ? 'text' : 'password'" 
+              id="motDePasse" 
+              name="motDePasse"
+              [(ngModel)]="motDePasse"
+              placeholder="Entrez votre mot de passe"
+              required
+              #passwordInput="ngModel">
+            <button type="button" class="toggle-password" (click)="togglePassword()">
+              <i class="material-icons">{{ !showPassword ? 'visibility_off' : 'visibility' }}</i>
+            </button>
+          </div>
+          <div class="error-message" *ngIf="passwordInput.invalid && passwordInput.touched">
+            Mot de passe requis
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmMotDePasse">Confirmer le mot de passe</label>
+          <div class="input-wrapper">
+            <i class="material-icons">lock_outline</i>
+            <input 
+              [type]="showConfirmPassword ? 'text' : 'password'" 
+              id="confirmMotDePasse" 
+              name="confirmMotDePasse"
+              [(ngModel)]="confirmMotDePasse"
+              placeholder="Confirmez votre mot de passe"
+              required
+              #confirmPasswordInput="ngModel">
+            <button type="button" class="toggle-password" (click)="toggleConfirmPassword()">
+              <i class="material-icons">{{ !showConfirmPassword ? 'visibility_off' : 'visibility' }}</i>
+            </button>
+          </div>
+          <div class="error-message" *ngIf="confirmPasswordInput.invalid && confirmPasswordInput.touched">
+            Confirmation requise
+          </div>
+        </div>
+      </div>
+
+      <!-- Message d'erreur global -->
+      <div class="error-message" *ngIf="errorMessage" style="text-align: center; margin-bottom: 16px;">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Message de succès -->
+      <div class="success-message" *ngIf="successMessage" style="text-align: center; margin-bottom: 16px;">
+        {{ successMessage }}
+      </div>
+
+      <button type="submit" class="inscription-btn" [disabled]="!nom || !prenom || !email || !motDePasse || !confirmMotDePasse || !numeroTelephone || isLoading">
+        <span *ngIf="!isLoading">S'inscrire</span>
+        <div class="loading-spinner" *ngIf="isLoading"></div>
+      </button>
+    </form>
+
+    <div class="inscription-footer">
+      <p>Déjà un compte ? <a href="#" class="login-link" (click)="navigateToLogin()">Se connecter</a></p>
+    </div>
+  </div>
+</div>

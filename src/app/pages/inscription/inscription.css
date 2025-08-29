@@ -10,7 +10,7 @@
   --success-color: #4caf50;
 }
 
-.login-container {
+.inscription-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -20,18 +20,18 @@
   font-family: 'Roboto', sans-serif;
 }
 
-.login-card {
+.inscription-card {
   background: rgb(255, 255, 255);
   border-radius: 16px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   padding: 40px;
   width: 100%;
-  max-width: 420px;
+  max-width: 520px;
   position: relative;
   overflow: hidden;
 }
 
-.login-card::before {
+.inscription-card::before {
   content: '';
   position: absolute;
   top: 0;
@@ -41,26 +41,37 @@
   background: linear-gradient(90deg, #667eea, #764ba2);
 }
 
-.login-header {
+.inscription-header {
   text-align: center;
   margin-bottom: 30px;
 }
 
-.login-header h2 {
+.inscription-header h2 {
   color: var(--text-dark);
   font-size: 28px;
   font-weight: 600;
   margin: 0 0 8px 0;
 }
 
-.login-header p {
+.inscription-header p {
   color: var(--text-light);
   font-size: 14px;
   margin: 0;
 }
 
-.login-form {
+.inscription-form {
   width: 100%;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.form-row .form-group {
+  flex: 1;
+  margin-bottom: 0;
 }
 
 .form-group {
@@ -152,86 +163,17 @@
   font-weight: 500;
 }
 
-.form-options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-.checkbox-wrapper {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
+.success-message {
+  color: var(--success-color) !important;
   font-size: 14px;
-  color: var(--text-dark);
-  user-select: none;
-  position: relative;
+  font-weight: 500;
+  background-color: rgba(76, 175, 80, 0.1);
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(76, 175, 80, 0.3);
 }
 
-.checkbox-wrapper input[type="checkbox"] {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-}
-
-.checkmark {
-  height: 18px;
-  width: 18px;
-  background-color: white;
-  border: 2px solid #ddd;
-  border-radius: 4px;
-  margin-right: 10px;
-  position: relative;
-  transition: all 0.3s ease;
-  flex-shrink: 0;
-  display: inline-block;
-}
-
-.checkbox-wrapper:hover input ~ .checkmark {
-  border-color: var(--primary-green);
-}
-
-.checkbox-wrapper input:checked ~ .checkmark {
-  background-color: #199822;
-  border-color: #199822;
-}
-
-.checkmark:after {
-  content: "";
-  position: absolute;
-  display: none;
-}
-
-.checkbox-wrapper input:checked ~ .checkmark:after {
-  display: block;
-}
-
-.checkbox-wrapper .checkmark:after {
-  left: 5px;
-  top: 1px;
-  width: 4px;
-  height: 9px;
-  border: solid white;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
-}
-
-.forgot-password {
-  color: var(--primary-green);
-  text-decoration: none;
-  font-size: 14px;
-  transition: all 0.3s ease;
-}
-
-.forgot-password:hover {
-  color: var(--primary-green-hover);
-  text-decoration: underline;
-}
-
-.login-btn {
+.inscription-btn {
   width: 100%;
   padding: 16px;
   background-color: #199822;
@@ -251,18 +193,18 @@
   text-align: center;
 }
 
-.login-btn:hover:not(:disabled) {
+.inscription-btn:hover:not(:disabled) {
   background-color: #2e7d32;
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(46, 125, 50, 0.4);
 }
 
-.login-btn:active:not(:disabled) {
+.inscription-btn:active:not(:disabled) {
   transform: translateY(0);
   background-color: #1b5e20;
 }
 
-.login-btn:disabled {
+.inscription-btn:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
   transform: none;
@@ -270,7 +212,7 @@
   color: #666666;
 }
 
-.login-btn span {
+.inscription-btn span {
   color: white;
   font-size: 16px;
   font-weight: 600;
@@ -291,33 +233,34 @@
   100% { transform: rotate(360deg); }
 }
 
-.login-footer {
+.inscription-footer {
   text-align: center;
   margin-top: 30px;
   padding-top: 20px;
   border-top: 1px solid var(--border-color);
 }
 
-.login-footer p {
+.inscription-footer p {
   color: var(--text-light);
   font-size: 14px;
   margin: 0;
 }
 
-.signup-link {
+.login-link {
   color: var(--primary-green);
   text-decoration: none;
   font-weight: 500;
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
-.signup-link:hover {
+.login-link:hover {
   color: var(--primary-green-hover);
   text-decoration: underline;
 }
 
 /* Animations d'entrée */
-.login-card {
+.inscription-card {
   animation: slideUp 0.6s ease-out;
 }
 
@@ -333,22 +276,28 @@
 }
 
 /* Responsive */
+@media (max-width: 640px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .form-row .form-group {
+    margin-bottom: 24px;
+  }
+}
+
 @media (max-width: 480px) {
-  .login-container {
+  .inscription-container {
     padding: 10px;
   }
   
-  .login-card {
+  .inscription-card {
     padding: 30px 20px;
+    max-width: 100%;
   }
   
-  .login-header h2 {
+  .inscription-header h2 {
     font-size: 24px;
-  }
-  
-  .form-options {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
   }
 }

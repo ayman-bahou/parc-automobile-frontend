@@ -30,7 +30,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.notificationCountService.loadNotificationCount();
     
     // Démarrer le polling automatique pour détecter les nouvelles notifications
-    this.notificationCountService.startPolling(3000); // Toutes les 3 secondes
+    //this.notificationCountService.startPolling(3000); // Toutes les 3 secondes
   }
 
   ngOnDestroy() {

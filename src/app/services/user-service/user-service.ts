@@ -13,6 +13,18 @@ export class UserService {
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
+  // Méthode d'inscription
+  inscription(userData: any): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post(`${this.apiUrl}/inscription`, userData, {
+      headers,
+      responseType: 'text'
+    });
+  }
+
   updateUser(
     id: number,
     userData: Partial<Utilisateur>

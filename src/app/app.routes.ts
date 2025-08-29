@@ -16,6 +16,11 @@ export const routes: Routes = [
     canActivate: [loginGuard] // Empêche l'accès si déjà connecté
   },
   {
+    path: 'inscription',
+    loadComponent: () => import('./pages/inscription/inscription').then(m => m.Inscription),
+    canActivate: [loginGuard] // Empêche l'accès si déjà connecté
+  },
+  {
     path: 'admin',
     component: AdminLayoutComponent,
     canActivate: [authGuard], // Protège toutes les routes admin

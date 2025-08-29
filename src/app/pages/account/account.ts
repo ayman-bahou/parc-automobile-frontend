@@ -126,7 +126,7 @@ export class Account implements OnInit {
     const emailChanged = this.editedProfile.email !== null && this.editedProfile.email !== this.userProfile.email;
 
     // Appel API pour sauvegarder
-    this.userService.updateUser(this.userProfile.id, this.editedProfile).subscribe({
+    this.userService.updateUser(this.userProfile.id!, this.editedProfile).subscribe({
       next: (updatedUser) => {
         this.userProfile = {
           id: this.userProfile.id,
@@ -202,7 +202,7 @@ export class Account implements OnInit {
 
   changeUserRole(user: Utilisateur, newRole: string) {
     console.log(`Changement de rôle pour ${user.prenom} ${user.nom}:`);
-    console.log(`Ancien rôle: "${user.role.libelle}"`);
+    console.log(`Ancien rôle: "${user.role?.libelle || 'Non défini'}"`);
     console.log(`Nouveau rôle: "${newRole}"`);
     
    // if (!this.isAdmin || !confirm(`Êtes-vous sûr de vouloir changer le rôle de ${user.prenom} ${user.nom} vers ${newRole} ?`)) {
@@ -211,12 +211,14 @@ export class Account implements OnInit {
    //   return;
    // }
 
-    const ancienRole = user.role.libelle;
+    const ancienRole = user.role?.libelle;
 
-    this.userService.changerRole(user.id, newRole).subscribe({
+    this.userService.changerRole(user.id!, newRole).subscribe({
       next: (response) => {
         // Mettre à jour le rôle de l'utilisateur dans la liste locale
-        user.role.libelle = newRole;
+        if (user.role) {
+          user.role.libelle = newRole;
+        }
         console.log(`Rôle changé avec succès pour ${user.prenom} ${user.nom}`);
         
         // Afficher le message de succès du serveur
@@ -226,7 +228,9 @@ export class Account implements OnInit {
       error: (error: any) => {
         console.error('Erreur lors du changement de rôle:', error);
         // Restaurer l'ancien rôle en cas d'erreur
-        user.role.libelle = ancienRole;
+        if (user.role && ancienRole) {
+          user.role.libelle = ancienRole;
+        }
         
         // Afficher un message d'erreur approprié
         let errorMessage = 'Erreur lors du changement de rôle';
@@ -271,7 +275,7 @@ export class Account implements OnInit {
       return;
     }
 
-    this.userService.supprimerUser(user.id).subscribe({
+    this.userService.supprimerUser(user.id!).subscribe({
       next: () => {
         // Retirer l'utilisateur de la liste
         this.allUsers = this.allUsers.filter(u => u.id !== user.id);
